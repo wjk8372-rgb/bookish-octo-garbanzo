@@ -7,6 +7,6 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "engines": { "node": ">=14" },
+  "engines": { "node": ">=18" },
   "private": true
 }

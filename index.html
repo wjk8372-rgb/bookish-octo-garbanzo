@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#4e79ff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="取件查询">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/icon-512.jpg">
+<title>取件查询</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Roboto, sans-serif;
+    background: #f5f7fa;
+    color: #1a1a1a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* 手机外壳容器，大屏居中显示 */
+  .phone-frame {
+    width: 100%;
+    max-width: 375px;
+    min-height: 100vh;
+    background: #fff;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 顶部状态栏（假） */
+  .status-bar {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #4e79ff 0%, #3d62e6 100%);
+    color: #fff;
+  }
+
+  /* 头部区域 */
+  .app-header {
+    background: linear-gradient(135deg, #4e79ff 0%, #3d62e6 100%);
+    padding: 8px 16px 80px;
+    color: #fff;
+    position: relative;
+  }
+
+  .app-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .app-subtitle {
+    font-size: 13px;
+    opacity: 0.9;
+  }
+
+  /* 查询区 */
+  .search-area {
+    background: #fff;
+    margin: -60px 16px 0;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 8px 24px rgba(78, 121, 255, 0.15);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .input-group {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: #f5f7fa;
+    border-radius: 10px;
+    padding: 0 12px;
+    height: 44px;
+    transition: all 0.2s;
+    border: 1.5px solid transparent;
+  }
+
+  .input-group:focus-within {
+    background: #fff;
+    border-color: #4e79ff;
+  }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+    color: #8a92a3;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  .input-group input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    color: #1a1a1a;
+    height: 100%;
+  }
+
+  .input-group input::placeholder {
+    color: #b3b9c5;
+  }
+
+  .query-btn {
+    height: 44px;
+    padding: 0 20px;
+    background: linear-gradient(135deg, #4e79ff 0%, #3d62e6 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .query-btn:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+  }
+
+  .query-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* loading 小圆圈 */
+  .loading {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: -3px;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* 运单号反查区 */
+  .track-area {
+    background: #fff;
+    margin: 12px 16px 0;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eef1f6;
+  }
+
+  .track-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #3a3f4c;
+    margin-bottom: 10px;
+  }
+
+  .track-icon {
+    width: 16px;
+    height: 16px;
+    color: #4e79ff;
+  }
+
+  .track-inputs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .track-inputs input {
+    flex: 1;
+    height: 40px;
+    border: 1.5px solid #e4e8f0;
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: 14px;
+    background: #fafbfc;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    min-width: 0;
+  }
+
+  .track-inputs input:focus {
+    border-color: #4e79ff;
+    background: #fff;
+  }
+
+  .track-btn {
+    width: 100%;
+    height: 40px;
+    background: #fff;
+    color: #4e79ff;
+    border: 1.5px solid #4e79ff;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .track-btn:active { transform: scale(0.98); opacity: 0.85; }
+  .track-btn:disabled { color: #b3b9c5; border-color: #d6dae3; background: #f5f7fa; cursor: not-allowed; }
+
+  /* 来源标签 */
+  .source-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-left: auto;
+  }
+
+  .source-badge.kdniao { color: #4e79ff; background: #e8efff; }
+  .source-badge.sms { color: #6b7280; background: #f0f1f4; }
+  .source-badge.track { color: #16a34a; background: #dcfce7; }
+
+  /* 运单号行 */
+  .waybill-row {
+    font-size: 12px;
+    color: #8a92a3;
+    background: #f5f7fa;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+
+  .waybill-row .field-label {
+    color: #b3b9c5;
+    margin-right: 6px;
+  }
+
+  /* 列表区 */
+  .list-area {
+    padding: 20px 16px 16px;
+    flex: 1;
+  }
+
+  .list-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .list-title h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .count {
+    font-size: 12px;
+    color: #8a92a3;
+    background: #eef1f6;
+    padding: 3px 10px;
+    border-radius: 10px;
+  }
+
+  /* 筛选 tab */
+  .filter-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .filter-tab {
+    flex: 1;
+    height: 34px;
+    border: 1.5px solid #e4e8f0;
+    background: #fff;
+    color: #5a6172;
+    border-radius: 17px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .filter-tab .tab-count {
+    font-size: 11px;
+    background: #f0f2f7;
+    color: #8a92a3;
+    padding: 0 6px;
+    border-radius: 8px;
+    min-width: 18px;
+    height: 16px;
+    line-height: 16px;
+    text-align: center;
+  }
+
+  .filter-tab.active {
+    border-color: #4e79ff;
+    color: #4e79ff;
+    background: #e8efff;
+    font-weight: 600;
+  }
+
+  .filter-tab.active .tab-count {
+    background: #4e79ff;
+    color: #fff;
+  }
+
+  .filter-tab:active { transform: scale(0.97); }
+
+  /* 卡片列表 */
+  #cardList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid #eef1f6;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .company {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .company-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .company-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .status-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+
+  .status-tag.arrived { color: #16a34a; background: #dcfce7; }
+  .status-tag.pending { color: #ea580c; background: #fff7ed; }
+  .status-tag.signed { color: #0284c7; background: #e0f2fe; }
+  .status-tag.in_transit { color: #6366f1; background: #e0e7ff; }
+  .status-tag.problem { color: #dc2626; background: #fee2e2; }
+
+  /* 物流轨迹 */
+  .traces {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #eef0f5;
+  }
+
+  .traces-title {
+    font-size: 12px;
+    color: #9aa3b5;
+    margin-bottom: 6px;
+  }
+
+  .trace-item {
+    position: relative;
+    padding-left: 14px;
+    font-size: 12px;
+    color: #5a6172;
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+
+  .trace-item:last-child { margin-bottom: 0; }
+
+  .trace-item::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 7px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #c5ccdb;
+  }
+
+  .trace-item.latest::before {
+    background: #4e79ff;
+    width: 7px;
+    height: 7px;
+    top: 6px;
+    left: 1px;
+  }
+
+  .trace-item.latest {
+    color: #1a1a1a;
+    font-weight: 500;
+  }
+
+  .trace-time {
+    color: #b3b9c5;
+    font-size: 11px;
+    margin-right: 6px;
+  }
+
+  /* 取件码 */
+  .pickup-code {
+    background: linear-gradient(135deg, #f0f5ff 0%, #e8efff 100%);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+
+  .pickup-code .label {
+    font-size: 12px;
+    color: #4e79ff;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .pickup-code .code {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1a1a1a;
+    letter-spacing: 2px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  /* 信息行 */
+  .info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    padding: 6px 0;
+  }
+
+  .field-label {
+    color: #8a92a3;
+    width: 44px;
+    flex-shrink: 0;
+  }
+
+  .field-value {
+    color: #1a1a1a;
+    flex: 1;
+    word-break: break-all;
+  }
+
+  /* 空状态 */
+  .empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: #b3b9c5;
+  }
+
+  .empty svg {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  .empty p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Toast 提示 */
+  .toast {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(26, 26, 26, 0.92);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    z-index: 9999;
+    animation: toastIn 0.25s ease-out;
+    max-width: 80%;
+    text-align: center;
+  }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translate(-50%, -10px); }
+    to   { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  /* 底部安全区 */
+  .safe-bottom {
+    height: 20px;
+    background: #fff;
+  }
+</style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- 顶部假状态栏 -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>📶  📡  🔋</span>
+    </div>
+
+    <!-- 头部 -->
+    <div class="app-header">
+      <div class="app-title">我的取件码</div>
+      <div class="app-subtitle">聚合短信解析 + 运单号反查，取件一站搞定</div>
+    </div>
+
+    <!-- 查询区 -->
+    <div class="search-area">
+      <div class="input-group">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        <input id="phoneInput" type="tel" maxlength="11" placeholder="请输入手机号" inputmode="numeric">
+      </div>
+      <button id="queryBtn" class="query-btn" onclick="handleQuery()">查询</button>
+    </div>
+
+    <!-- 运单号反查（快递鸟） -->
+    <div class="track-area">
+      <div class="track-title">
+        <svg class="track-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="1" y="3" width="15" height="13" rx="1"/>
+          <path d="M16 8h4l3 3v5h-7z"/>
+          <circle cx="5.5" cy="18.5" r="2.5"/>
+          <circle cx="18.5" cy="18.5" r="2.5"/>
+        </svg>
+        <span>运单号反查取件码</span>
+        <span class="source-badge kdniao">快递鸟</span>
+      </div>
+      <div class="track-inputs">
+        <input id="waybillInput" type="text" placeholder="运单号（8~30 位）" autocomplete="off">
+        <input id="trackPhoneInput" type="tel" maxlength="11" placeholder="关联手机号（可选）" inputmode="numeric">
+      </div>
+      <button id="trackBtn" class="track-btn" onclick="handleTrack()">反查取件码</button>
+    </div>
+
+    <!-- 列表区 -->
+    <div class="list-area">
+      <div class="list-title">
+        <h2>我的快递</h2>
+        <span class="count" id="countTag">0 件</span>
+      </div>
+
+      <!-- 筛选 tab -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all">全部 <span class="tab-count" id="cntAll">0</span></button>
+        <button class="filter-tab" data-filter="arrived">已到 <span class="tab-count" id="cntArrived">0</span></button>
+        <button class="filter-tab" data-filter="pending">未到 <span class="tab-count" id="cntPending">0</span></button>
+      </div>
+
+      <div id="cardList">
+        <div class="empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+          <p>输入手机号，查询所有<br>取件码和快递状态</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="safe-bottom"></div>
+  </div>
+
+<script>
+  // —— DOM 引用 ——
+  const phoneInput = document.getElementById('phoneInput');
+  const queryBtn = document.getElementById('queryBtn');
+  const waybillInput = document.getElementById('waybillInput');
+  const trackPhoneInput = document.getElementById('trackPhoneInput');
+  const trackBtn = document.getElementById('trackBtn');
+  const cardList = document.getElementById('cardList');
+  const countTag = document.getElementById('countTag');
+
+  // 仅允许数字输入
+  phoneInput.addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '');
+  });
+  trackPhoneInput.addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '');
+  });
+
+  // 回车触发查询
+  phoneInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleQuery(); });
+  waybillInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleTrack(); });
+  trackPhoneInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleTrack(); });
+
+  // —— 工具 ——
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+  }
+
+  function fmtTime(iso) {
+    try {
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return iso;
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
+      return `${m}-${day} ${hh}:${mm}`;
+    } catch { return iso; }
+  }
+
+  // 快递 logo 颜色/标签映射（前端展示用）
+  const COMPANY_PRESETS = [
+    { kw: ['顺丰'], color: '#000000', tag: '顺' },
+    { kw: ['京东'], color: '#e1251b', tag: '京' },
+    { kw: ['中通'], color: '#0063b8', tag: '中' },
+    { kw: ['圆通'], color: '#ff4a00', tag: '圆' },
+    { kw: ['申通'], color: '#ff7b0a', tag: '申' },
+    { kw: ['韵达'], color: '#004098', tag: '韵' },
+    { kw: ['邮政', 'ems', 'EMS'], color: '#007d35', tag: '邮' },
+    { kw: ['极兔'], color: '#722ed1', tag: '极' },
+    { kw: ['菜鸟'], color: '#ff6a00', tag: '菜' },
+    { kw: ['丰巢'], color: '#1377eb', tag: '巢' },
+  ];
+
+  function companyMeta(name) {
+    const n = (name || '').toLowerCase();
+    const hit = COMPANY_PRESETS.find((p) => p.kw.some((k) => n.includes(k.toLowerCase())));
+    if (hit) return hit;
+    return { color: '#4e79ff', tag: (name || '?').slice(0, 1) };
+  }
+
+  // 状态文案 + 标签 class
+  function statusMeta(item) {
+    if (item.pickupCode) return { text: '已到驿站', cls: 'arrived', codeLabel: '取件码' };
+    if (item.status === 'signed') return { text: '已签收', cls: 'signed', codeLabel: '取件码' };
+    if (item.status === 'in_transit') return { text: '在途中', cls: 'in_transit', codeLabel: '取件码' };
+    if (item.status === 'problem') return { text: '问题件', cls: 'problem', codeLabel: '取件码' };
+    return { text: '待生成', cls: 'pending', codeLabel: '取件码' };
+  }
+
+  // 渲染单张卡片
+  function renderCard(item) {
+    const meta = companyMeta(item.company);
+    const sm = statusMeta(item);
+    const tag = `<span class="status-tag ${sm.cls}">${sm.text}</span>`;
+    const code = item.pickupCode ? esc(item.pickupCode) : '—';
+    const station = (item.station && item.station !== item.company) ? esc(item.station) : '—';
+    const addressRow = item.address
+      ? `<div class="info-row"><span class="field-label">地址</span><span class="field-value">${esc(item.address)}</span></div>`
+      : '';
+    const arriveTime = item.smsDate || (item.receivedAt ? fmtTime(item.receivedAt) : '');
+    const arriveRow = arriveTime
+      ? `<div class="info-row"><span class="field-label">${item.pickupCode ? '到达' : '更新'}</span><span class="field-value">${esc(arriveTime)}</span></div>`
+      : '';
+    let sourceBadge = '';
+    if (item.source === 'track') sourceBadge = '<span class="source-badge track">运单号反查</span>';
+    else if (item.source === 'sms') sourceBadge = '<span class="source-badge sms">短信</span>';
+    const waybillRow = item.waybill
+      ? `<div class="waybill-row"><span class="field-label">运单号</span>${esc(item.waybill)}</div>`
+      : '';
+    let tracesHtml = '';
+    if (Array.isArray(item.traces) && item.traces.length) {
+      const recent = item.traces.slice(-3).reverse();
+      tracesHtml = `
+        <div class="traces">
+          <div class="traces-title">物流轨迹</div>
+          ${recent.map((t, i) => `
+            <div class="trace-item ${i === 0 ? 'latest' : ''}">
+              <span class="trace-time">${esc(t.AcceptTime || '')}</span>${esc(t.AcceptStation || '')}
+            </div>
+          `).join('')}
+        </div>`;
+    }
+
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="company">
+            <div class="company-logo" style="background:${meta.color};">${esc(meta.tag)}</div>
+            <span class="company-name">${esc(item.company || '未知快递')}</span>
+          </div>
+          ${tag}
+        </div>
+        ${waybillRow}
+        <div class="pickup-code">
+          <span class="label">${sm.codeLabel}</span>
+          <span class="code">${code}</span>
+        </div>
+        <div class="info-row">
+          <span class="field-label">驿站</span>
+          <span class="field-value">${station}</span>
+        </div>
+        ${addressRow}
+        ${arriveRow}
+        ${tracesHtml}
+        ${sourceBadge}
+      </div>
+    `;
+  }
+
+  // Toast
+  let _toastTimer = null;
+  function showToast(msg) {
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = msg;
+    document.body.appendChild(el);
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => {
+      el.style.transition = 'opacity .25s, transform .25s';
+      el.style.opacity = '0';
+      el.style.transform = 'translate(-50%, -10px)';
+      setTimeout(() => el.remove(), 280);
+    }, 2200);
+  }
+
+  function renderEmpty(msg) {
+    cardList.innerHTML = `
+      <div class="empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+          <line x1="12" y1="22.08" x2="12" y2="12"/>
+        </svg>
+        <p>${esc(msg)}</p>
+      </div>
+    `;
+  }
+
+  // —— 筛选状态 ——
+  const state = {
+    filter: 'all',
+    allItems: [],
+  };
+
+  function classifyItem(item) {
+    if (item.pickupCode || item.status === 'signed') return 'arrived';
+    return 'pending';
+  }
+
+  function getFilteredItems() {
+    if (state.filter === 'all') return state.allItems;
+    return state.allItems.filter((it) => classifyItem(it) === state.filter);
+  }
+
+  function renderList() {
+    const arrivedCount = state.allItems.filter((it) => classifyItem(it) === 'arrived').length;
+    const pendingCount = state.allItems.length - arrivedCount;
+    document.getElementById('cntAll').textContent = state.allItems.length;
+    document.getElementById('cntArrived').textContent = arrivedCount;
+    document.getElementById('cntPending').textContent = pendingCount;
+
+    const list = getFilteredItems();
+    countTag.textContent = list.length + ' 件';
+
+    if (state.allItems.length === 0) {
+      renderEmpty('该手机号暂无取件记录');
+      return;
+    }
+    if (list.length === 0) {
+      const label = state.filter === 'arrived' ? '已到' : '未到';
+      renderEmpty(`当前筛选（${label}）下无快递`);
+      return;
+    }
+    cardList.innerHTML = list.map(renderCard).join('');
+  }
+
+  function setFilter(filter) {
+    state.filter = filter;
+    document.querySelectorAll('.filter-tab').forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.filter === filter);
+    });
+    renderList();
+  }
+
+  document.querySelectorAll('.filter-tab').forEach((btn) => {
+    btn.addEventListener('click', () => setFilter(btn.dataset.filter));
+  });
+
+  // —— 查询手机号 ——
+  async function handleQuery() {
+    const phone = phoneInput.value.trim();
+    if (!phone) { showToast('请输入手机号'); return; }
+    if (!/^1[3-9]\d{9}$/.test(phone)) {
+      showToast('请输入正确的 11 位手机号');
+      return;
+    }
+
+    queryBtn.disabled = true;
+    queryBtn.innerHTML = '<span class="loading"></span>查询中';
+
+    try {
+      const res = await fetch(`/api/pickups?phone=${encodeURIComponent(phone)}`);
+      const json = await res.json();
+      if (!res.ok || json.error) {
+        showToast(json.error || '查询失败');
+        state.allItems = [];
+        renderList();
+        return;
+      }
+      state.allItems = json.items || [];
+      renderList();
+      if (state.allItems.length > 0) {
+        showToast(`已为您查询到 ${state.allItems.length} 件快递`);
+      }
+    } catch (e) {
+      showToast('网络错误，请稍后重试');
+      state.allItems = [];
+      renderList();
+    } finally {
+      queryBtn.disabled = false;
+      queryBtn.textContent = '查询';
+    }
+  }
+
+  // —— 运单号反查取件码（快递鸟）——
+  async function handleTrack() {
+    const waybill = waybillInput.value.trim();
+    const phone = trackPhoneInput.value.trim();
+    if (!waybill) { showToast('请输入运单号'); return; }
+    if (waybill.length < 8 || waybill.length > 30) {
+      showToast('运单号长度应为 8~30 位');
+      return;
+    }
+    if (phone && !/^1[3-9]\d{9}$/.test(phone)) {
+      showToast('关联手机号格式不正确');
+      return;
+    }
+
+    trackBtn.disabled = true;
+    trackBtn.innerHTML = '<span class="loading"></span>反查中';
+
+    try {
+      const res = await fetch('/api/track-query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ waybill, phone: phone || undefined }),
+      });
+      const json = await res.json();
+
+      if (!res.ok) { showToast(json.error || '反查失败'); return; }
+      if (!json.ok) {
+        showToast('未查到取件码：' + (json.error || '快递鸟未返回取件码'));
+        return;
+      }
+
+      const d = json.data;
+      if (d.pickupCode) {
+        showToast(`取件码：${d.pickupCode}` + (json.mock ? '（mock）' : ''));
+      } else {
+        showToast('快递已派送，但轨迹中暂无取件码');
+      }
+
+      if (phone) {
+        phoneInput.value = phone;
+        await handleQuery();
+      } else {
+        const item = {
+          company: d.company,
+          waybill: d.waybill,
+          pickupCode: d.pickupCode,
+          station: d.station,
+          traces: d.traces,
+          trackState: d.state,
+          status: d.pickupCode ? 'arrived'
+            : (d.state === '3' ? 'signed'
+              : d.state === '2' ? 'in_transit'
+              : d.state === '4' ? 'problem' : 'pending'),
+          receivedAt: new Date().toISOString(),
+          source: 'track',
+        };
+        state.allItems = [item];
+        state.filter = 'all';
+        document.querySelectorAll('.filter-tab').forEach((btn) => {
+          btn.classList.toggle('active', btn.dataset.filter === 'all');
+        });
+        renderList();
+      }
+    } catch (e) {
+      showToast('网络错误，请稍后重试');
+    } finally {
+      trackBtn.disabled = false;
+      trackBtn.textContent = '反查取件码';
+    }
+  }
+
+  // 注册 Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch((err) => {
+        console.log('SW 注册失败（仅 HTTPS/localhost 可用）：', err.message);
+      });
+    });
+  }
+</script>
+</body>
+</html>

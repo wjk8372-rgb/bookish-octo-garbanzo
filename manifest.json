@@ -1,0 +1,17 @@
+{
+  "name": "取件查询",
+  "short_name": "取件",
+  "description": "聚合短信解析 + 运单号反查，一键查询所有快递取件码与状态",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f7fa",
+  "theme_color": "#4e79ff",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "/icons/icon-512.jpg", "sizes": "192x192", "type": "image/jpeg", "purpose": "any" },
+    { "src": "/icons/icon-512.jpg", "sizes": "512x512", "type": "image/jpeg", "purpose": "any" },
+    { "src": "/icons/icon-512.jpg", "sizes": "512x512", "type": "image/jpeg", "purpose": "maskable" }
+  ]
+}

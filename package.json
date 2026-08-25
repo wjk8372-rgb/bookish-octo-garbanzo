@@ -1,0 +1,12 @@
+{
+  "name": "pickup-query-app",
+  "version": "1.0.0",
+  "description": "取件查询应用：短信解析 + 手机号查询 + 前端展示",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": { "node": ">=14" },
+  "private": true
+}

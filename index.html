@@ -1,16 +1,3 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#4e79ff">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="取件查询">
-<link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" href="/icons/icon-512.jpg">
-<title>取件查询</title>
-<style>
   * {
     margin: 0;
     padding: 0;
@@ -52,10 +39,10 @@
     color: #fff;
   }
 
-  /* 头部区域 */
+  /* 头部区域（修复：加大底部留白，保证查询卡片完整露出） */
   .app-header {
     background: linear-gradient(135deg, #4e79ff 0%, #3d62e6 100%);
-    padding: 8px 16px 80px;
+    padding: 8px 16px 104px;
     color: #fff;
     position: relative;
   }
@@ -71,16 +58,18 @@
     opacity: 0.9;
   }
 
-  /* 查询区 */
+  /* 查询区（修复：提高层级、减小负 margin，保证不会被头部盖住） */
   .search-area {
     background: #fff;
-    margin: -60px 16px 0;
+    margin: -72px 16px 0;
     border-radius: 14px;
     padding: 14px;
-    box-shadow: 0 8px 24px rgba(78, 121, 255, 0.15);
+    box-shadow: 0 8px 24px rgba(78, 121, 255, 0.2);
     display: flex;
     gap: 10px;
     align-items: center;
+    position: relative;
+    z-index: 10;
   }
 
   .input-group {
@@ -163,11 +152,13 @@
   /* 运单号反查区 */
   .track-area {
     background: #fff;
-    margin: 12px 16px 0;
+    margin: 16px 16px 0;
     border-radius: 14px;
     padding: 14px 16px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
     border: 1px solid #eef1f6;
+    position: relative;
+    z-index: 5;
   }
 
   .track-title {
@@ -535,407 +526,14 @@
     height: 20px;
     background: #fff;
   }
-</style>
-</head>
-<body>
-  <div class="phone-frame">
-    <!-- 顶部假状态栏 -->
-    <div class="status-bar">
-      <span>9:41</span>
-      <span>📶  📡  🔋</span>
-    </div>
 
-    <!-- 头部 -->
-    <div class="app-header">
-      <div class="app-title">我的取件码</div>
-      <div class="app-subtitle">聚合短信解析 + 运单号反查，取件一站搞定</div>
-    </div>
-
-    <!-- 查询区 -->
-    <div class="search-area">
-      <div class="input-group">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-        </svg>
-        <input id="phoneInput" type="tel" maxlength="11" placeholder="请输入手机号" inputmode="numeric">
-      </div>
-      <button id="queryBtn" class="query-btn" onclick="handleQuery()">查询</button>
-    </div>
-
-    <!-- 运单号反查（快递鸟） -->
-    <div class="track-area">
-      <div class="track-title">
-        <svg class="track-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="1" y="3" width="15" height="13" rx="1"/>
-          <path d="M16 8h4l3 3v5h-7z"/>
-          <circle cx="5.5" cy="18.5" r="2.5"/>
-          <circle cx="18.5" cy="18.5" r="2.5"/>
-        </svg>
-        <span>运单号反查取件码</span>
-        <span class="source-badge kdniao">快递鸟</span>
-      </div>
-      <div class="track-inputs">
-        <input id="waybillInput" type="text" placeholder="运单号（8~30 位）" autocomplete="off">
-        <input id="trackPhoneInput" type="tel" maxlength="11" placeholder="关联手机号（可选）" inputmode="numeric">
-      </div>
-      <button id="trackBtn" class="track-btn" onclick="handleTrack()">反查取件码</button>
-    </div>
-
-    <!-- 列表区 -->
-    <div class="list-area">
-      <div class="list-title">
-        <h2>我的快递</h2>
-        <span class="count" id="countTag">0 件</span>
-      </div>
-
-      <!-- 筛选 tab -->
-      <div class="filter-tabs">
-        <button class="filter-tab active" data-filter="all">全部 <span class="tab-count" id="cntAll">0</span></button>
-        <button class="filter-tab" data-filter="arrived">已到 <span class="tab-count" id="cntArrived">0</span></button>
-        <button class="filter-tab" data-filter="pending">未到 <span class="tab-count" id="cntPending">0</span></button>
-      </div>
-
-      <div id="cardList">
-        <div class="empty">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-            <line x1="12" y1="22.08" x2="12" y2="12"/>
-          </svg>
-          <p>输入手机号，查询所有<br>取件码和快递状态</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="safe-bottom"></div>
-  </div>
-
-<script>
-  // —— DOM 引用 ——
-  const phoneInput = document.getElementById('phoneInput');
-  const queryBtn = document.getElementById('queryBtn');
-  const waybillInput = document.getElementById('waybillInput');
-  const trackPhoneInput = document.getElementById('trackPhoneInput');
-  const trackBtn = document.getElementById('trackBtn');
-  const cardList = document.getElementById('cardList');
-  const countTag = document.getElementById('countTag');
-
-  // 仅允许数字输入
-  phoneInput.addEventListener('input', (e) => {
-    e.target.value = e.target.value.replace(/\D/g, '');
-  });
-  trackPhoneInput.addEventListener('input', (e) => {
-    e.target.value = e.target.value.replace(/\D/g, '');
-  });
-
-  // 回车触发查询
-  phoneInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleQuery(); });
-  waybillInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleTrack(); });
-  trackPhoneInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleTrack(); });
-
-  // —— 工具 ——
-  function esc(s) {
-    return String(s ?? '').replace(/[&<>"']/g, (c) => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-    }[c]));
-  }
-
-  function fmtTime(iso) {
-    try {
-      const d = new Date(iso);
-      if (isNaN(d.getTime())) return iso;
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      const hh = String(d.getHours()).padStart(2, '0');
-      const mm = String(d.getMinutes()).padStart(2, '0');
-      return `${m}-${day} ${hh}:${mm}`;
-    } catch { return iso; }
-  }
-
-  // 快递 logo 颜色/标签映射（前端展示用）
-  const COMPANY_PRESETS = [
-    { kw: ['顺丰'], color: '#000000', tag: '顺' },
-    { kw: ['京东'], color: '#e1251b', tag: '京' },
-    { kw: ['中通'], color: '#0063b8', tag: '中' },
-    { kw: ['圆通'], color: '#ff4a00', tag: '圆' },
-    { kw: ['申通'], color: '#ff7b0a', tag: '申' },
-    { kw: ['韵达'], color: '#004098', tag: '韵' },
-    { kw: ['邮政', 'ems', 'EMS'], color: '#007d35', tag: '邮' },
-    { kw: ['极兔'], color: '#722ed1', tag: '极' },
-    { kw: ['菜鸟'], color: '#ff6a00', tag: '菜' },
-    { kw: ['丰巢'], color: '#1377eb', tag: '巢' },
-  ];
-
-  function companyMeta(name) {
-    const n = (name || '').toLowerCase();
-    const hit = COMPANY_PRESETS.find((p) => p.kw.some((k) => n.includes(k.toLowerCase())));
-    if (hit) return hit;
-    return { color: '#4e79ff', tag: (name || '?').slice(0, 1) };
-  }
-
-  // 状态文案 + 标签 class
-  function statusMeta(item) {
-    if (item.pickupCode) return { text: '已到驿站', cls: 'arrived', codeLabel: '取件码' };
-    if (item.status === 'signed') return { text: '已签收', cls: 'signed', codeLabel: '取件码' };
-    if (item.status === 'in_transit') return { text: '在途中', cls: 'in_transit', codeLabel: '取件码' };
-    if (item.status === 'problem') return { text: '问题件', cls: 'problem', codeLabel: '取件码' };
-    return { text: '待生成', cls: 'pending', codeLabel: '取件码' };
-  }
-
-  // 渲染单张卡片
-  function renderCard(item) {
-    const meta = companyMeta(item.company);
-    const sm = statusMeta(item);
-    const tag = `<span class="status-tag ${sm.cls}">${sm.text}</span>`;
-    const code = item.pickupCode ? esc(item.pickupCode) : '—';
-    const station = (item.station && item.station !== item.company) ? esc(item.station) : '—';
-    const addressRow = item.address
-      ? `<div class="info-row"><span class="field-label">地址</span><span class="field-value">${esc(item.address)}</span></div>`
-      : '';
-    const arriveTime = item.smsDate || (item.receivedAt ? fmtTime(item.receivedAt) : '');
-    const arriveRow = arriveTime
-      ? `<div class="info-row"><span class="field-label">${item.pickupCode ? '到达' : '更新'}</span><span class="field-value">${esc(arriveTime)}</span></div>`
-      : '';
-    let sourceBadge = '';
-    if (item.source === 'track') sourceBadge = '<span class="source-badge track">运单号反查</span>';
-    else if (item.source === 'sms') sourceBadge = '<span class="source-badge sms">短信</span>';
-    const waybillRow = item.waybill
-      ? `<div class="waybill-row"><span class="field-label">运单号</span>${esc(item.waybill)}</div>`
-      : '';
-    let tracesHtml = '';
-    if (Array.isArray(item.traces) && item.traces.length) {
-      const recent = item.traces.slice(-3).reverse();
-      tracesHtml = `
-        <div class="traces">
-          <div class="traces-title">物流轨迹</div>
-          ${recent.map((t, i) => `
-            <div class="trace-item ${i === 0 ? 'latest' : ''}">
-              <span class="trace-time">${esc(t.AcceptTime || '')}</span>${esc(t.AcceptStation || '')}
-            </div>
-          `).join('')}
-        </div>`;
+  /* 小屏手机强制修复：查询卡片不被头部盖住 */
+  @media (max-width: 375px) {
+    .app-header {
+      padding-bottom: 88px;
     }
-
-    return `
-      <div class="card">
-        <div class="card-header">
-          <div class="company">
-            <div class="company-logo" style="background:${meta.color};">${esc(meta.tag)}</div>
-            <span class="company-name">${esc(item.company || '未知快递')}</span>
-          </div>
-          ${tag}
-        </div>
-        ${waybillRow}
-        <div class="pickup-code">
-          <span class="label">${sm.codeLabel}</span>
-          <span class="code">${code}</span>
-        </div>
-        <div class="info-row">
-          <span class="field-label">驿站</span>
-          <span class="field-value">${station}</span>
-        </div>
-        ${addressRow}
-        ${arriveRow}
-        ${tracesHtml}
-        ${sourceBadge}
-      </div>
-    `;
-  }
-
-  // Toast
-  let _toastTimer = null;
-  function showToast(msg) {
-    const el = document.createElement('div');
-    el.className = 'toast';
-    el.textContent = msg;
-    document.body.appendChild(el);
-    clearTimeout(_toastTimer);
-    _toastTimer = setTimeout(() => {
-      el.style.transition = 'opacity .25s, transform .25s';
-      el.style.opacity = '0';
-      el.style.transform = 'translate(-50%, -10px)';
-      setTimeout(() => el.remove(), 280);
-    }, 2200);
-  }
-
-  function renderEmpty(msg) {
-    cardList.innerHTML = `
-      <div class="empty">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-          <line x1="12" y1="22.08" x2="12" y2="12"/>
-        </svg>
-        <p>${esc(msg)}</p>
-      </div>
-    `;
-  }
-
-  // —— 筛选状态 ——
-  const state = {
-    filter: 'all',
-    allItems: [],
-  };
-
-  function classifyItem(item) {
-    if (item.pickupCode || item.status === 'signed') return 'arrived';
-    return 'pending';
-  }
-
-  function getFilteredItems() {
-    if (state.filter === 'all') return state.allItems;
-    return state.allItems.filter((it) => classifyItem(it) === state.filter);
-  }
-
-  function renderList() {
-    const arrivedCount = state.allItems.filter((it) => classifyItem(it) === 'arrived').length;
-    const pendingCount = state.allItems.length - arrivedCount;
-    document.getElementById('cntAll').textContent = state.allItems.length;
-    document.getElementById('cntArrived').textContent = arrivedCount;
-    document.getElementById('cntPending').textContent = pendingCount;
-
-    const list = getFilteredItems();
-    countTag.textContent = list.length + ' 件';
-
-    if (state.allItems.length === 0) {
-      renderEmpty('该手机号暂无取件记录');
-      return;
-    }
-    if (list.length === 0) {
-      const label = state.filter === 'arrived' ? '已到' : '未到';
-      renderEmpty(`当前筛选（${label}）下无快递`);
-      return;
-    }
-    cardList.innerHTML = list.map(renderCard).join('');
-  }
-
-  function setFilter(filter) {
-    state.filter = filter;
-    document.querySelectorAll('.filter-tab').forEach((btn) => {
-      btn.classList.toggle('active', btn.dataset.filter === filter);
-    });
-    renderList();
-  }
-
-  document.querySelectorAll('.filter-tab').forEach((btn) => {
-    btn.addEventListener('click', () => setFilter(btn.dataset.filter));
-  });
-
-  // —— 查询手机号 ——
-  async function handleQuery() {
-    const phone = phoneInput.value.trim();
-    if (!phone) { showToast('请输入手机号'); return; }
-    if (!/^1[3-9]\d{9}$/.test(phone)) {
-      showToast('请输入正确的 11 位手机号');
-      return;
-    }
-
-    queryBtn.disabled = true;
-    queryBtn.innerHTML = '<span class="loading"></span>查询中';
-
-    try {
-      const res = await fetch(`/api/pickups?phone=${encodeURIComponent(phone)}`);
-      const json = await res.json();
-      if (!res.ok || json.error) {
-        showToast(json.error || '查询失败');
-        state.allItems = [];
-        renderList();
-        return;
-      }
-      state.allItems = json.items || [];
-      renderList();
-      if (state.allItems.length > 0) {
-        showToast(`已为您查询到 ${state.allItems.length} 件快递`);
-      }
-    } catch (e) {
-      showToast('网络错误，请稍后重试');
-      state.allItems = [];
-      renderList();
-    } finally {
-      queryBtn.disabled = false;
-      queryBtn.textContent = '查询';
+    .search-area {
+      margin: -60px 16px 0;
+      box-shadow: 0 6px 20px rgba(78, 121, 255, 0.25);
     }
   }
-
-  // —— 运单号反查取件码（快递鸟）——
-  async function handleTrack() {
-    const waybill = waybillInput.value.trim();
-    const phone = trackPhoneInput.value.trim();
-    if (!waybill) { showToast('请输入运单号'); return; }
-    if (waybill.length < 8 || waybill.length > 30) {
-      showToast('运单号长度应为 8~30 位');
-      return;
-    }
-    if (phone && !/^1[3-9]\d{9}$/.test(phone)) {
-      showToast('关联手机号格式不正确');
-      return;
-    }
-
-    trackBtn.disabled = true;
-    trackBtn.innerHTML = '<span class="loading"></span>反查中';
-
-    try {
-      const res = await fetch('/api/track-query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ waybill, phone: phone || undefined }),
-      });
-      const json = await res.json();
-
-      if (!res.ok) { showToast(json.error || '反查失败'); return; }
-      if (!json.ok) {
-        showToast('未查到取件码：' + (json.error || '快递鸟未返回取件码'));
-        return;
-      }
-
-      const d = json.data;
-      if (d.pickupCode) {
-        showToast(`取件码：${d.pickupCode}` + (json.mock ? '（mock）' : ''));
-      } else {
-        showToast('快递已派送，但轨迹中暂无取件码');
-      }
-
-      if (phone) {
-        phoneInput.value = phone;
-        await handleQuery();
-      } else {
-        const item = {
-          company: d.company,
-          waybill: d.waybill,
-          pickupCode: d.pickupCode,
-          station: d.station,
-          traces: d.traces,
-          trackState: d.state,
-          status: d.pickupCode ? 'arrived'
-            : (d.state === '3' ? 'signed'
-              : d.state === '2' ? 'in_transit'
-              : d.state === '4' ? 'problem' : 'pending'),
-          receivedAt: new Date().toISOString(),
-          source: 'track',
-        };
-        state.allItems = [item];
-        state.filter = 'all';
-        document.querySelectorAll('.filter-tab').forEach((btn) => {
-          btn.classList.toggle('active', btn.dataset.filter === 'all');
-        });
-        renderList();
-      }
-    } catch (e) {
-      showToast('网络错误，请稍后重试');
-    } finally {
-      trackBtn.disabled = false;
-      trackBtn.textContent = '反查取件码';
-    }
-  }
-
-  // 注册 Service Worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch((err) => {
-        console.log('SW 注册失败（仅 HTTPS/localhost 可用）：', err.message);
-      });
-    });
-  }
-</script>
-</body>
-</html>

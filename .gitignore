@@ -1,0 +1,13 @@
+node_modules/
+.pnp/
+.pnp.js
+data/
+*.log
+npm-debug.log*
+cloudflared
+lt.js
+.trae-html-share-packages/
+.trae/
+.vscode/
+.idea/
+.DS_Store

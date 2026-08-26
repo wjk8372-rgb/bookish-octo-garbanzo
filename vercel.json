@@ -1,11 +1,14 @@
 {
   "version": 2,
   "buildCommand": "npm install --omit=dev",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index" }
+  ],
   "headers": [
     {
       "source": "/sw.js",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache" },
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" },
         { "key": "Service-Worker-Allowed", "value": "/" }
       ]
     },

@@ -1,0 +1,31 @@
+{
+  "listen_host": "0.0.0.0",
+  "listen_port": 8080,
+
+  "webhook_token": "change-me-to-a-long-random-string",
+
+  "poll_interval_seconds": 15,
+
+  "email_accounts": [
+    {
+      "enabled": true,
+      "label": "QQ邮箱",
+      "server": "imap.qq.com",
+      "port": 993,
+      "email": "your_qq_number@qq.com",
+      "password": "your_qq_authorization_code",
+      "folder": "INBOX"
+    },
+    {
+      "enabled": true,
+      "label": "Gmail",
+      "server": "imap.gmail.com",
+      "port": 993,
+      "email": "your_account@gmail.com",
+      "password": "your_gmail_app_password",
+      "folder": "INBOX"
+    }
+  ],
+
+  "keep_codes": 300
+}

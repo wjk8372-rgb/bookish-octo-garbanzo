@@ -18,6 +18,7 @@ import asyncio
 import json
 import queue
 import re
+import sys
 import threading
 import time
 from datetime import datetime
@@ -35,9 +36,21 @@ except ImportError:
     HAS_IMAP = False
 
 
-BASE_DIR = Path(__file__).parent
-CONFIG_FILE = BASE_DIR / "config.json"
-TEMPLATE_FILE = BASE_DIR / "templates" / "index.html"
+def resource_path(relative: str) -> Path:
+    """资源路径：兼容 PyInstaller 单文件模式（--onefile 运行时解压到 _MEIPASS）。"""
+    base = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+    return base / relative
+
+
+def config_path() -> Path:
+    """配置文件路径：打包后放在 exe 同目录，便于用户编辑。开发态放脚本同目录。"""
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).resolve().parent / "config.json"
+    return Path(__file__).resolve().parent / "config.json"
+
+
+TEMPLATE_FILE = resource_path("templates/index.html")
+CONFIG_FILE = config_path()
 
 
 def load_config() -> dict:
@@ -175,47 +188,75 @@ def make_item(*, source: str, sender: str, subject: str, body: str, code: str | 
     }
 
 
-# ---------- IMAP 轮询 ----------
+# ---------- IMAP（IDLE 实时 + 轮询兜底） ----------
+
+def process_unseen(mb, label: str, seen_uids: set):
+    """处理当前未读邮件：提取验证码并标记已读。原地修改 seen_uids。"""
+    for msg in mb.fetch(AND(seen=False), reverse=True, limit=20):
+        if msg.uid in seen_uids:
+            continue
+        seen_uids.add(msg.uid)
+        if len(seen_uids) > 500:  # 防止无限增长
+            keep = list(seen_uids)[-300:]
+            seen_uids.clear()
+            seen_uids.update(keep)
+        text = msg.text or strip_html(msg.html)
+        code = extract_code(text)
+        if not code:
+            continue  # 不是验证码邮件，忽略但保持未读，下次不再处理
+        item = make_item(
+            source=label,
+            sender=msg.from_,
+            subject=msg.subject,
+            body=text,
+            code=code,
+        )
+        if STORE.add(item):
+            print(f"[IMAP] {label} 收到验证码: {code} (from {msg.from_})")
+        mb.flag(msg.uid, "\\Seen", True)  # 仅对验证码邮件标记已读
+
 
 def imap_worker(account: dict) -> None:
     if not HAS_IMAP:
         print(f"[IMAP] imap_tools 未安装，跳过 {account.get('label')}")
         return
     label = account.get("label", account.get("email", "?"))
-    interval = CONFIG.get("poll_interval_seconds", 15)
+    idle_timeout = CONFIG.get("idle_timeout_seconds", 60)
+    fallback_interval = CONFIG.get("poll_interval_seconds", 15)
     seen_uids: set[str] = set()
-    print(f"[IMAP] 启动轮询：{label}（每 {interval}s）")
+    print(f"[IMAP] 启动（优先 IDLE 模式）：{label}")
     while True:
+        idle_ok = True  # 每次重连都重新尝试 IDLE
         try:
             with MailBox(account["server"], port=account.get("port", 993)).login(
-                account["email"], account["password"], initial_folder=account.get("folder", "INBOX")
+                account["email"], account["password"],
+                initial_folder=account.get("folder", "INBOX"),
             ) as mb:
-                # 找未读邮件
-                for msg in mb.fetch(AND(seen=False), reverse=True, limit=20):
-                    if msg.uid in seen_uids:
-                        continue
-                    seen_uids.add(msg.uid)
-                    # 去重集合别无限增长
-                    if len(seen_uids) > 500:
-                        seen_uids = set(list(seen_uids)[-300:])
-                    text = msg.text or strip_html(msg.html)
-                    code = extract_code(text)
-                    if not code:
-                        continue  # 不是验证码邮件就忽略，保持未读
-                    item = make_item(
-                        source=label,
-                        sender=msg.from_,
-                        subject=msg.subject,
-                        body=text,
-                        code=code,
-                    )
-                    if STORE.add(item):
-                        print(f"[IMAP] {label} 收到验证码: {code} (from {msg.from_})")
-                    # 标记已读，避免重复处理（仅对提取到验证码的邮件）
-                    mb.flag(msg.uid, "\\Seen", True)
+                process_unseen(mb, label, seen_uids)  # 先处理当前已存在的未读
+                while True:  # 持续监听，连接保持
+                    if idle_ok:
+                        try:
+                            mb.idle.start()
+                            mb.idle.wait(timeout=idle_timeout)  # 阻塞，新邮件到达或超时返回
+                            mb.idle.done()
+                        except Exception as ie:
+                            s = str(ie).lower()
+                            # 服务器不支持 IDLE → 回退轮询；其它异常 → 重连
+                            if "support" in s or "capability" in s or ("idle" in s and ("not" in s or "no" in s)):
+                                print(f"[IMAP] {label} 不支持 IDLE，回退到 {fallback_interval}s 轮询")
+                                idle_ok = False
+                                try:
+                                    mb.idle.done()
+                                except Exception:
+                                    pass
+                                continue
+                            raise
+                    else:
+                        time.sleep(fallback_interval)
+                    process_unseen(mb, label, seen_uids)
         except Exception as e:
-            print(f"[IMAP] {label} 轮询出错: {e}")
-        time.sleep(interval)
+            print(f"[IMAP] {label} 连接出错: {e}，{fallback_interval}s 后重连")
+            time.sleep(fallback_interval)
 
 
 # ---------- FastAPI ----------

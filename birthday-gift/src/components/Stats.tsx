@@ -54,7 +54,7 @@ export default function Stats() {
   ]
 
   return (
-    <section className="relative py-24 md:py-36 px-6">
+    <section id="stats" className="relative py-24 md:py-36 px-6">
       <div className="max-w-5xl mx-auto">
         <h2 className="text-center font-serif text-2xl md:text-4xl text-amber-soft mb-4">
           关于我们的一些数字

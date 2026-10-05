@@ -33,7 +33,7 @@ export default function OptionalLetter({ onOpen }: OptionalLetterProps) {
   }
 
   return (
-    <section className="relative py-24 md:py-36 px-6">
+    <section id="optional-letter" className="relative py-24 md:py-36 px-6">
       <div className="max-w-2xl mx-auto text-center">
         <AnimatePresence mode="wait">
           {!open ? (

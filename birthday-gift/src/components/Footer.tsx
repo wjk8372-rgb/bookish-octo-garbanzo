@@ -7,7 +7,7 @@ type FooterProps = {
 
 export default function Footer({ onRestart, onReplayMusic }: FooterProps) {
   return (
-    <footer className="relative py-24 md:py-32 px-6 text-center">
+    <footer id="footer" className="relative py-24 md:py-32 px-6 text-center">
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}

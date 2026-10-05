@@ -4,7 +4,7 @@ import MomentCard from './MomentCard'
 
 export default function Timeline() {
   return (
-    <section className="relative py-24 md:py-36 px-6">
+    <section id="timeline" className="relative py-24 md:py-36 px-6">
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}

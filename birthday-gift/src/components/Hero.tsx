@@ -10,7 +10,7 @@ export default function Hero({ onScrollDown }: HeroProps) {
   const toAnniv = daysToAnniversary()
 
   return (
-    <section className="relative min-h-[100svh] flex flex-col items-center justify-center px-6 text-center">
+    <section id="hero" className="relative min-h-[100svh] flex flex-col items-center justify-center px-6 text-center">
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

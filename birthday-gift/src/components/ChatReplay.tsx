@@ -51,7 +51,7 @@ export default function ChatReplay() {
   const visible = items.slice(0, visibleCount)
 
   return (
-    <section className="relative py-24 md:py-36 px-6">
+    <section id="chat" className="relative py-24 md:py-36 px-6">
       <div className="max-w-2xl mx-auto">
         <h2 className="text-center font-serif text-2xl md:text-4xl text-amber-soft mb-4">
           聊天记录展厅

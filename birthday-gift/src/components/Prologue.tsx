@@ -10,7 +10,7 @@ const messages = [
 
 export default function Prologue() {
   return (
-    <section className="relative py-24 md:py-36 px-6">
+    <section id="prologue" className="relative py-24 md:py-36 px-6">
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}

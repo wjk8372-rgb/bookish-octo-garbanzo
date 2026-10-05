@@ -189,7 +189,7 @@ export default function LetterViewer() {
   const letterMoments = moments.filter((m) => m.type === 'letter' && m.letter)
 
   return (
-    <section className="relative py-24 md:py-36 px-6">
+    <section id="letter" className="relative py-24 md:py-36 px-6">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-center font-serif text-2xl md:text-4xl text-amber-soft mb-4">
           信件展厅

@@ -28,6 +28,23 @@ export default function MusicPicker({ bgm }: MusicPickerProps) {
 
   const fmt = (v: number) => Math.round(v * 100)
 
+  // 曲目 → 对应章节 id 的映射
+  const sectionMap: Record<string, string> = {
+    opening: 'hero',
+    timeline: 'timeline',
+    letter: 'letter',
+    ending: 'footer',
+  }
+
+  const handleSelect = (trackId: string) => {
+    bgm.selectTrack(trackId)
+    const targetId = sectionMap[trackId]
+    if (targetId) {
+      const el = document.getElementById(targetId)
+      el?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <>
       <button
@@ -99,7 +116,7 @@ export default function MusicPicker({ bgm }: MusicPickerProps) {
                 return (
                   <button
                     key={t.id}
-                    onClick={() => bgm.selectTrack(t.id)}
+                    onClick={() => handleSelect(t.id)}
                     className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
                       active
                         ? 'bg-amber-warm/15 text-amber-soft'
@@ -115,6 +132,7 @@ export default function MusicPicker({ bgm }: MusicPickerProps) {
                         {t.mood}
                       </span>
                     </span>
+                    <span className="text-text-faint/60 text-xs">↗</span>
                   </button>
                 )
               })}

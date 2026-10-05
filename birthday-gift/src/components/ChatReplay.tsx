@@ -69,29 +69,48 @@ export default function ChatReplay() {
           </button>
         </div>
 
-        <div className="glass p-4 md:p-6 min-h-[400px] max-h-[70vh] overflow-y-auto">
-          <AnimatePresence initial={false}>
-            {visible.map((item, i) => {
-              const showDivider =
-                i === 0 || visible[i - 1]?.momentId !== item.momentId
-              return (
-                <motion.div
-                  key={`${replayKey}-${i}`}
-                  initial={{ opacity: 0, y: 10, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                  className="mb-2"
-                >
-                  {showDivider && (
-                    <div className="flex items-center gap-3 my-4">
-                      <div className="flex-1 h-px bg-amber-warm/15" />
-                      <span className="text-[11px] text-text-faint whitespace-nowrap">
-                        {formatDate(item.date)} · {item.title}
-                      </span>
-                      <div className="flex-1 h-px bg-amber-warm/15" />
-                    </div>
-                  )}
+        {/* 聊天窗口容器 */}
+        <div className="rounded-2xl overflow-hidden shadow-2xl border border-black/10">
+          {/* 顶栏：模拟聊天 App */}
+          <div className="flex items-center gap-3 px-4 py-3 bg-[#2b2a35]">
+            <div className="text-slate-400 text-lg">‹</div>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[12px] text-amber-950 font-medium shrink-0">
+              怡
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm text-slate-100 font-medium truncate">陈若怡</div>
+              <div className="text-[11px] text-slate-400 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+                在线
+              </div>
+            </div>
+            <div className="text-slate-400 text-lg">⋯</div>
+          </div>
+
+          {/* 聊天区 */}
+          <div className="chat-window-bg p-4 md:p-5 min-h-[400px] max-h-[70vh] overflow-y-auto">
+            <AnimatePresence initial={false}>
+              {visible.map((item, i) => {
+                const showDivider =
+                  i === 0 || visible[i - 1]?.momentId !== item.momentId
+                return (
+                  <motion.div
+                    key={`${replayKey}-${i}`}
+                    initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    className="mb-2"
+                  >
+                    {showDivider && (
+                      <div className="flex items-center gap-3 my-4">
+                        <div className="flex-1 h-px bg-black/10" />
+                        <span className="text-[11px] text-slate-500 whitespace-nowrap">
+                          {formatDate(item.date)} · {item.title}
+                        </span>
+                        <div className="flex-1 h-px bg-black/10" />
+                      </div>
+                    )}
 
                   <div
                     className={`chat-row flex ${
@@ -113,7 +132,7 @@ export default function ChatReplay() {
                       </div>
                       {item.msg.time && (
                         <span
-                          className={`text-[10px] text-text-faint/70 mt-0.5 ${
+                          className={`text-[10px] text-slate-500/80 mt-0.5 ${
                             item.msg.from === 'me' ? 'text-right pr-1' : 'text-left pl-1'
                           }`}
                         >
@@ -129,7 +148,7 @@ export default function ChatReplay() {
                   </div>
 
                   {item.narration && (
-                    <p className="mt-2 mb-4 text-center text-[12px] text-amber-soft/60 italic font-kai">
+                    <p className="mt-2 mb-4 text-center text-[12px] text-slate-600 italic font-kai">
                       「{item.narration}」
                     </p>
                   )}
@@ -140,14 +159,14 @@ export default function ChatReplay() {
 
           {visibleCount < items.length && (
             <div className="flex justify-start items-end gap-2 mt-2">
-              <div className="w-7 h-7 rounded-full bg-amber-warm/15 flex items-center justify-center text-[11px] text-amber-soft/70">
-                她
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[12px] text-amber-950 font-medium shrink-0 shadow-sm">
+                怡
               </div>
               <div className="bubble-her px-3.5 py-2.5 flex gap-1">
                 {[0, 1, 2].map((d) => (
                   <motion.span
                     key={d}
-                    className="w-1.5 h-1.5 rounded-full bg-amber-soft/60"
+                    className="w-1.5 h-1.5 rounded-full bg-slate-500"
                     animate={{ opacity: [0.3, 1, 0.3] }}
                     transition={{ duration: 1.2, repeat: Infinity, delay: d * 0.2 }}
                   />
@@ -155,6 +174,7 @@ export default function ChatReplay() {
               </div>
             </div>
           )}
+          </div>
         </div>
       </div>
     </section>

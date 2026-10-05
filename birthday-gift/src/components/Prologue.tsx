@@ -25,60 +25,84 @@ export default function Prologue() {
           我们的第一次交流 · 2025.11.21
         </p>
 
-        {/* 时间戳 */}
-        <div className="text-center mb-6">
-          <span className="text-[11px] text-text-faint tracking-wider">
-            2025/11/21 15:37
-          </span>
-        </div>
+        {/* 聊天窗口 */}
+        <div className="rounded-2xl overflow-hidden shadow-2xl border border-black/10">
+          {/* 顶栏 */}
+          <div className="flex items-center gap-3 px-4 py-3 bg-[#2b2a35]">
+            <div className="text-slate-400 text-lg">‹</div>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[12px] text-amber-950 font-medium shrink-0">
+              怡
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm text-slate-100 font-medium truncate">陈若怡</div>
+              <div className="text-[11px] text-slate-400 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+                在线
+              </div>
+            </div>
+            <div className="text-slate-400 text-lg">⋯</div>
+          </div>
 
-        <div className="space-y-1.5">
-          {messages.map((msg, i) => {
-            const isMe = msg.from === 'me'
-            const showTime =
-              i === 0 || messages[i - 1].time !== msg.time
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.15 }}
-                className={`chat-row flex ${
-                  isMe ? 'justify-end' : 'justify-start'
-                } items-end gap-2`}
-              >
-                {!isMe && (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[12px] text-amber-950 font-medium shrink-0 shadow-sm">
-                    怡
-                  </div>
-                )}
-                <div className="flex flex-col max-w-[72%]">
-                  <div
-                    className={`px-3.5 py-2 text-sm leading-relaxed ${
-                      isMe ? 'bubble-me' : 'bubble-her'
-                    }`}
+          {/* 聊天区 */}
+          <div className="chat-window-bg p-4 md:p-5">
+            {/* 日期分割线 */}
+            <div className="flex items-center gap-3 my-2 mb-4">
+              <div className="flex-1 h-px bg-black/10" />
+              <span className="text-[11px] text-slate-500 whitespace-nowrap">
+                2025/11/21 15:37
+              </span>
+              <div className="flex-1 h-px bg-black/10" />
+            </div>
+
+            <div className="space-y-1.5">
+              {messages.map((msg, i) => {
+                const isMe = msg.from === 'me'
+                const showTime =
+                  i === 0 || messages[i - 1].time !== msg.time
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: i * 0.15 }}
+                    className={`chat-row flex ${
+                      isMe ? 'justify-end' : 'justify-start'
+                    } items-end gap-2`}
                   >
-                    {msg.text}
-                  </div>
-                  {showTime && (
-                    <span
-                      className={`text-[10px] text-text-faint/70 mt-0.5 ${
-                        isMe ? 'text-right pr-1' : 'text-left pl-1'
-                      }`}
-                    >
-                      {msg.time}
-                    </span>
-                  )}
-                </div>
-                {isMe && (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-[12px] text-slate-100 font-medium shrink-0 shadow-sm">
-                    我
-                  </div>
-                )}
-              </motion.div>
-            )
-          })}
+                    {!isMe && (
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[12px] text-amber-950 font-medium shrink-0 shadow-sm">
+                        怡
+                      </div>
+                    )}
+                    <div className="flex flex-col max-w-[72%]">
+                      <div
+                        className={`px-3.5 py-2 text-sm leading-relaxed ${
+                          isMe ? 'bubble-me' : 'bubble-her'
+                        }`}
+                      >
+                        {msg.text}
+                      </div>
+                      {showTime && (
+                        <span
+                          className={`text-[10px] text-slate-500/80 mt-0.5 ${
+                            isMe ? 'text-right pr-1' : 'text-left pl-1'
+                          }`}
+                        >
+                          {msg.time}
+                        </span>
+                      )}
+                    </div>
+                    {isMe && (
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-[12px] text-slate-100 font-medium shrink-0 shadow-sm">
+                        我
+                      </div>
+                    )}
+                  </motion.div>
+                )
+              })}
+            </div>
+          </div>
         </div>
 
         <motion.p

@@ -259,6 +259,18 @@ body {
   background: var(--color-amber-dim);
 }
 
+/* ---------- Chat scroll inside cards ---------- */
+.chat-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-amber-dim);
+  border-radius: 2px;
+}
+
 /* ---------- Range slider ---------- */
 input[type="range"] {
   -webkit-appearance: none;

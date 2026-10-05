@@ -158,6 +158,18 @@ body {
   border-radius: 6px;
 }
 
+/* ---------- Envelope ---------- */
+.envelope-body {
+  background-color: #f5efe0;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(120, 90, 40, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, rgba(120, 90, 40, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px, 28px 28px;
+}
+.envelope {
+  background: #f5efe0;
+}
+
 /* ---------- Chat window background ---------- */
 .chat-window-bg {
   background-color: #ededed;

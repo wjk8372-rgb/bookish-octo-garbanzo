@@ -15,7 +15,7 @@ import { useBgm } from './hooks/useBgm'
 
 type Stage = 'loading' | 'gate' | 'main'
 
-// 她的名字/昵称：留空则不显示，可替换为真实昵称
+// 你的名字/昵称：留空则不显示，可替换为真实昵称
 const HER_NAME = '若怡'
 
 export default function App() {

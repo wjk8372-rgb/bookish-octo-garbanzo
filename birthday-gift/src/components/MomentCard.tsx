@@ -80,14 +80,14 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
             </div>
 
             <p className="mt-3 text-[11px] text-text-faint text-center">
-              点击翻转 · 她可能不知道的是…
+              点击翻转 · 你可能不知道的是…
             </p>
           </div>
 
           {/* 背面 */}
           <div className="flip-face flip-back glass p-5 md:p-6 flex flex-col justify-center border-amber-warm/30">
             <p className="text-xs text-amber-warm/70 tracking-widest mb-4">
-              她可能不知道的是…
+              你可能不知道的是…
             </p>
             <p className="font-kai text-text text-base md:text-lg leading-relaxed mb-5">
               {moment.note}

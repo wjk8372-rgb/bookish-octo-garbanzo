@@ -127,7 +127,7 @@ function EnvelopeCard({
                       《{title}》
                     </h3>
                     <span className="text-[11px] text-amber-900/50">
-                      {formatDate(date)} · {isFromHer ? '她' : '我'}
+                      {formatDate(date)} · {isFromHer ? '你' : '我'}
                     </span>
                   </div>
 

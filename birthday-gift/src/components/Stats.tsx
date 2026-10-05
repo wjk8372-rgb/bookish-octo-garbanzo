@@ -2,11 +2,6 @@ import { motion } from 'framer-motion'
 import { daysSinceStart, daysToAnniversary, formatDate } from '../utils/date'
 import { BIRTHDAY, START_DATE } from '../data/moments'
 
-// mock 统计数据（可替换为真实统计）
-const firstGoodnight = '2025-12-12'
-const longestChatEnd = '凌晨 02:17'
-const highFreqWords = ['哈哈哈', '晚安', '到家了吗']
-
 type Stat = {
   label: string
   value: string
@@ -34,22 +29,7 @@ export default function Stats() {
     {
       label: '第一条私信',
       value: formatDate(START_DATE),
-      sub: '23:41',
-    },
-    {
-      label: '第一次说晚安',
-      value: formatDate(firstGoodnight),
-      sub: '01:22',
-    },
-    {
-      label: '最长一次聊天',
-      value: longestChatEnd,
-      sub: '从夜里十点开始',
-    },
-    {
-      label: '高频词',
-      value: highFreqWords.join(' · '),
-      sub: '出现了很多很多次',
+      sub: '15:37',
     },
   ]
 

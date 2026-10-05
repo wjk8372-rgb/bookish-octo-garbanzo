@@ -44,21 +44,31 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
 
             <div className="flex-1 overflow-hidden fade-mask-b">
               {moment.type === 'chat' && moment.chat ? (
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   {moment.chat.slice(0, 4).map((msg, i) => (
                     <div
                       key={i}
-                      className={`flex ${
+                      className={`chat-row flex ${
                         msg.from === 'me' ? 'justify-end' : 'justify-start'
-                      }`}
+                      } items-end gap-1.5`}
                     >
+                      {msg.from === 'her' && (
+                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[10px] text-amber-950 shrink-0">
+                          怡
+                        </div>
+                      )}
                       <div
-                        className={`max-w-[80%] px-3 py-1.5 text-sm ${
+                        className={`max-w-[78%] px-2.5 py-1.5 text-[13px] leading-relaxed ${
                           msg.from === 'me' ? 'bubble-me' : 'bubble-her'
                         }`}
                       >
                         {msg.text}
                       </div>
+                      {msg.from === 'me' && (
+                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-[10px] text-slate-100 shrink-0">
+                          我
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

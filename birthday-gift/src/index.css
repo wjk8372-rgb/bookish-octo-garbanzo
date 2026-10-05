@@ -160,17 +160,53 @@ body {
 
 /* ---------- Chat bubbles ---------- */
 .bubble-me {
-  background: linear-gradient(135deg, #f7c970, #e0a94a);
-  color: #2a1f0a;
+  background: #f7c970;
+  color: #1a1206;
   border-radius: 18px 18px 4px 18px;
+  position: relative;
+  word-break: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+.bubble-me::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  bottom: 8px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 0 5px 6px;
+  border-color: transparent transparent transparent #f7c970;
 }
 
 .bubble-her {
-  background: rgba(255, 255, 255, 0.08);
-  color: #f3eee0;
-  border: 1px solid rgba(247, 201, 112, 0.2);
+  background: rgba(255, 255, 255, 0.92);
+  color: #1a1814;
   border-radius: 18px 18px 18px 4px;
-  backdrop-filter: blur(6px);
+  position: relative;
+  word-break: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.bubble-her::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  bottom: 8px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 6px 5px 0;
+  border-color: transparent rgba(255, 255, 255, 0.92) transparent transparent;
+}
+
+/* 连续消息：同一发送方相邻消息缩小间距、去掉尾角 */
+.chat-row + .chat-row .bubble-me,
+.chat-row + .chat-row .bubble-her {
+  border-radius: 18px;
+}
+.chat-row + .chat-row .bubble-me::after,
+.chat-row + .chat-row .bubble-her::after {
+  display: none;
 }
 
 /* ---------- Typewriter caret ---------- */

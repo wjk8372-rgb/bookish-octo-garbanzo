@@ -94,18 +94,18 @@ export default function ChatReplay() {
                   )}
 
                   <div
-                    className={`flex ${
+                    className={`chat-row flex ${
                       item.msg.from === 'me' ? 'justify-end' : 'justify-start'
-                    } items-end gap-2`}
+                    } items-end gap-2 mb-1.5`}
                   >
                     {item.msg.from === 'her' && (
-                      <div className="w-7 h-7 rounded-full bg-amber-warm/15 flex items-center justify-center text-[11px] text-amber-soft/70 shrink-0">
-                        她
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[12px] text-amber-950 font-medium shrink-0 shadow-sm">
+                        怡
                       </div>
                     )}
-                    <div className="flex flex-col">
+                    <div className="flex flex-col max-w-[72%]">
                       <div
-                        className={`max-w-[75%] px-3.5 py-2 text-sm ${
+                        className={`px-3.5 py-2 text-sm leading-relaxed ${
                           item.msg.from === 'me' ? 'bubble-me' : 'bubble-her'
                         }`}
                       >
@@ -113,8 +113,8 @@ export default function ChatReplay() {
                       </div>
                       {item.msg.time && (
                         <span
-                          className={`text-[10px] text-text-faint mt-1 ${
-                            item.msg.from === 'me' ? 'text-right' : 'text-left'
+                          className={`text-[10px] text-text-faint/70 mt-0.5 ${
+                            item.msg.from === 'me' ? 'text-right pr-1' : 'text-left pl-1'
                           }`}
                         >
                           {item.msg.time}
@@ -122,7 +122,7 @@ export default function ChatReplay() {
                       )}
                     </div>
                     {item.msg.from === 'me' && (
-                      <div className="w-7 h-7 rounded-full bg-night-500 flex items-center justify-center text-[11px] text-text-faint shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-[12px] text-slate-100 font-medium shrink-0 shadow-sm">
                         我
                       </div>
                     )}

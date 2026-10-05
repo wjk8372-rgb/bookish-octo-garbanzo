@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
 
-// mock 评论与私信内容，后续替换
-const myComment = '这段说得也太真实了吧，哈哈哈。'
-const herMessage = '你评论的那个我也觉得。'
+// 真实评论与私信内容
+const myComment = '思想很深刻。'
+const herMessage = '思想很深刻，我对你表示欣赏。'
 
 export default function Prologue() {
   return (

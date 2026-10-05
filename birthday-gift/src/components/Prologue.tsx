@@ -88,7 +88,7 @@ export default function Prologue() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="mt-14 text-center font-kai text-text-dim text-base md:text-xl max-w-2xl mx-auto italic"
         >
-          这是我们的第一次交流。后来我才知道，那是我这一年的开头。
+          这是我们的第一次交流，也是我们关系的开始，当时有一种宿命感，这似乎预示着什么。
         </motion.p>
       </motion.div>
     </section>

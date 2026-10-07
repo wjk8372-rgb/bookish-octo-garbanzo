@@ -120,41 +120,46 @@ export default function ChatReplay() {
                     const isMe = item.msg.from === 'me'
                     return (
                       <div
-                        className={`flex flex-col ${
-                          isMe ? 'items-end' : 'items-start'
-                        } mb-1.5`}
+                        className={`grid gap-x-2 gap-y-0.5 mb-1.5 ${
+                          isMe
+                            ? 'grid-cols-[1fr_auto] justify-items-end'
+                            : 'grid-cols-[auto_1fr] justify-items-start'
+                        }`}
                       >
-                        <div className="flex items-end gap-2">
-                          {!isMe && (
-                            <img
-                              src="/images/her-avatar.jpg"
-                              alt="怡"
-                              className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm"
-                            />
-                          )}
-                          <div
-                            className={`max-w-[72%] px-3.5 py-2 text-sm leading-relaxed ${
-                              isMe ? 'bubble-me' : 'bubble-her'
-                            }`}
-                          >
-                            {item.msg.text}
-                          </div>
-                          {isMe && (
+                        {isMe ? (
+                          <>
+                            <div className="max-w-[72%] justify-self-end px-3.5 py-2 text-sm leading-relaxed bubble-me self-end">
+                              {item.msg.text}
+                            </div>
                             <img
                               src="/images/me-avatar.jpg"
                               alt="我"
-                              className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm"
+                              className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                             />
-                          )}
-                        </div>
-                        {item.msg.time && (
-                          <span
-                            className={`text-[10px] text-slate-500/80 mt-0.5 ${
-                              isMe ? 'pr-10 text-right' : 'pl-10 text-left'
-                            }`}
-                          >
-                            {item.msg.time}
-                          </span>
+                            {item.msg.time && (
+                              <span className="text-[10px] text-slate-500/80 justify-self-end pr-1">
+                                {item.msg.time}
+                              </span>
+                            )}
+                            <span />
+                          </>
+                        ) : (
+                          <>
+                            <img
+                              src="/images/her-avatar.jpg"
+                              alt="怡"
+                              className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
+                            />
+                            <div className="max-w-[72%] px-3.5 py-2 text-sm leading-relaxed bubble-her self-end">
+                              {item.msg.text}
+                            </div>
+                            <span />
+                            {item.msg.time && (
+                              <span className="text-[10px] text-slate-500/80 pl-1">
+                                {item.msg.time}
+                              </span>
+                            )}
+                          </>
                         )}
                       </div>
                     )

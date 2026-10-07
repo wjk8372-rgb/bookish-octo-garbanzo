@@ -50,41 +50,46 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
                     return (
                       <div
                         key={i}
-                        className={`flex flex-col ${
-                          isMe ? 'items-end' : 'items-start'
+                        className={`grid gap-x-1.5 gap-y-0.5 ${
+                          isMe
+                            ? 'grid-cols-[1fr_auto] justify-items-end'
+                            : 'grid-cols-[auto_1fr] justify-items-start'
                         }`}
                       >
-                        <div className="flex items-end gap-1.5">
-                          {!isMe && (
-                            <img
-                              src="/images/her-avatar.jpg"
-                              alt="怡"
-                              className="w-6 h-6 rounded-full object-cover shrink-0"
-                            />
-                          )}
-                          <div
-                            className={`max-w-[78%] px-2.5 py-1.5 text-[13px] leading-relaxed ${
-                              isMe ? 'bubble-me' : 'bubble-her'
-                            }`}
-                          >
-                            {msg.text}
-                          </div>
-                          {isMe && (
+                        {isMe ? (
+                          <>
+                            <div className="max-w-[78%] justify-self-end px-2.5 py-1.5 text-[13px] leading-relaxed bubble-me self-end">
+                              {msg.text}
+                            </div>
                             <img
                               src="/images/me-avatar.jpg"
                               alt="我"
-                              className="w-6 h-6 rounded-full object-cover shrink-0"
+                              className="w-6 h-6 rounded-full object-cover shrink-0 self-end"
                             />
-                          )}
-                        </div>
-                        {msg.time && (
-                          <span
-                            className={`text-[10px] text-text-faint/70 mt-0.5 ${
-                              isMe ? 'pr-8 text-right' : 'pl-8 text-left'
-                            }`}
-                          >
-                            {msg.time}
-                          </span>
+                            {msg.time && (
+                              <span className="text-[10px] text-text-faint/70 justify-self-end pr-1">
+                                {msg.time}
+                              </span>
+                            )}
+                            <span />
+                          </>
+                        ) : (
+                          <>
+                            <img
+                              src="/images/her-avatar.jpg"
+                              alt="怡"
+                              className="w-6 h-6 rounded-full object-cover shrink-0 self-end"
+                            />
+                            <div className="max-w-[78%] px-2.5 py-1.5 text-[13px] leading-relaxed bubble-her self-end">
+                              {msg.text}
+                            </div>
+                            <span />
+                            {msg.time && (
+                              <span className="text-[10px] text-text-faint/70 pl-1">
+                                {msg.time}
+                              </span>
+                            )}
+                          </>
                         )}
                       </div>
                     )

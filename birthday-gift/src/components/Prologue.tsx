@@ -70,41 +70,46 @@ export default function Prologue() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: i * 0.15 }}
-                    className={`flex flex-col ${
-                      isMe ? 'items-end' : 'items-start'
+                    className={`grid gap-x-2 gap-y-0.5 ${
+                      isMe
+                        ? 'grid-cols-[1fr_auto] justify-items-end'
+                        : 'grid-cols-[auto_1fr] justify-items-start'
                     }`}
                   >
-                    <div className="flex items-end gap-2">
-                      {!isMe && (
-                        <img
-                          src="/images/her-avatar.jpg"
-                          alt="怡"
-                          className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm"
-                        />
-                      )}
-                      <div
-                        className={`max-w-[72%] px-3.5 py-2 text-sm leading-relaxed ${
-                          isMe ? 'bubble-me' : 'bubble-her'
-                        }`}
-                      >
-                        {msg.text}
-                      </div>
-                      {isMe && (
+                    {isMe ? (
+                      <>
+                        <div className="max-w-[72%] justify-self-end px-3.5 py-2 text-sm leading-relaxed bubble-me self-end">
+                          {msg.text}
+                        </div>
                         <img
                           src="/images/me-avatar.jpg"
                           alt="我"
-                          className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm"
+                          className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                         />
-                      )}
-                    </div>
-                    {showTime && (
-                      <span
-                        className={`text-[10px] text-slate-500/80 mt-0.5 ${
-                          isMe ? 'pr-10 text-right' : 'pl-10 text-left'
-                        }`}
-                      >
-                        {msg.time}
-                      </span>
+                        {showTime && (
+                          <span className="text-[10px] text-slate-500/80 justify-self-end pr-1">
+                            {msg.time}
+                          </span>
+                        )}
+                        <span />
+                      </>
+                    ) : (
+                      <>
+                        <img
+                          src="/images/her-avatar.jpg"
+                          alt="怡"
+                          className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
+                        />
+                        <div className="max-w-[72%] px-3.5 py-2 text-sm leading-relaxed bubble-her self-end">
+                          {msg.text}
+                        </div>
+                        <span />
+                        {showTime && (
+                          <span className="text-[10px] text-slate-500/80 pl-1">
+                            {msg.time}
+                          </span>
+                        )}
+                      </>
                     )}
                   </motion.div>
                 )

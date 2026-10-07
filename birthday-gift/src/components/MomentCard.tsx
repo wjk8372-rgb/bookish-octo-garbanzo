@@ -57,12 +57,23 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
                           怡
                         </div>
                       )}
-                      <div
-                        className={`max-w-[78%] px-2.5 py-1.5 text-[13px] leading-relaxed ${
-                          msg.from === 'me' ? 'bubble-me' : 'bubble-her'
-                        }`}
-                      >
-                        {msg.text}
+                      <div className="flex flex-col max-w-[78%]">
+                        <div
+                          className={`px-2.5 py-1.5 text-[13px] leading-relaxed ${
+                            msg.from === 'me' ? 'bubble-me' : 'bubble-her'
+                          }`}
+                        >
+                          {msg.text}
+                        </div>
+                        {msg.time && (
+                          <span
+                            className={`text-[10px] text-text-faint/70 mt-0.5 ${
+                              msg.from === 'me' ? 'text-right pr-1' : 'text-left pl-1'
+                            }`}
+                          >
+                            {msg.time}
+                          </span>
+                        )}
                       </div>
                       {msg.from === 'me' && (
                         <div className="w-6 h-6 rounded-full bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-[10px] text-slate-100 shrink-0">

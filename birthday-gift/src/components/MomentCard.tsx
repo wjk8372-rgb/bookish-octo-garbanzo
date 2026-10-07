@@ -20,7 +20,7 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
       className="w-full"
     >
       <div
-        className={`flip-card h-[320px] md:h-[360px] cursor-pointer glow-hover ${
+        className={`flip-card h-[480px] md:h-[520px] cursor-pointer glow-hover ${
           flipped ? 'is-flipped' : ''
         }`}
         onClick={() => setFlipped((f) => !f)}
@@ -58,16 +58,16 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
                       >
                         {isMe ? (
                           <>
-                            <div className={`max-w-[78%] justify-self-end self-end ${msg.image ? '' : 'px-2.5 py-1.5 bubble-me'}`}>
-                              {msg.image ? <img src={msg.image} alt="" className="w-[90px] h-auto rounded-lg" /> : <span className="text-[13px] leading-relaxed">{msg.text}</span>}
+                            <div className={`max-w-[78%] justify-self-end self-end ${msg.image ? '' : 'px-3 py-2 bubble-me'}`}>
+                              {msg.image ? <img src={msg.image} alt="" className="w-[110px] h-auto rounded-lg" /> : <span className="text-[15px] leading-relaxed">{msg.text}</span>}
                             </div>
                             <img
                               src="./images/me-avatar.jpg"
                               alt="我"
-                              className="w-6 h-6 rounded-full object-cover shrink-0 self-end"
+                              className="w-8 h-8 rounded-full object-cover shrink-0 self-end"
                             />
                             {msg.time && (
-                              <span className="text-[10px] text-text-faint/70 justify-self-end pr-1">
+                              <span className="text-[11px] text-text-faint/70 justify-self-end pr-1">
                                 {msg.time}
                               </span>
                             )}
@@ -78,14 +78,14 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
                             <img
                               src="./images/her-avatar.jpg"
                               alt="怡"
-                              className="w-6 h-6 rounded-full object-cover shrink-0 self-end"
+                              className="w-8 h-8 rounded-full object-cover shrink-0 self-end"
                             />
-                            <div className={`max-w-[78%] self-end ${msg.image ? '' : 'px-2.5 py-1.5 bubble-her'}`}>
-                              {msg.image ? <img src={msg.image} alt="" className="w-[90px] h-auto rounded-lg" /> : <span className="text-[13px] leading-relaxed">{msg.text}</span>}
+                            <div className={`max-w-[78%] self-end ${msg.image ? '' : 'px-3 py-2 bubble-her'}`}>
+                              {msg.image ? <img src={msg.image} alt="" className="w-[110px] h-auto rounded-lg" /> : <span className="text-[15px] leading-relaxed">{msg.text}</span>}
                             </div>
                             <span />
                             {msg.time && (
-                              <span className="text-[10px] text-text-faint/70 pl-1">
+                              <span className="text-[11px] text-text-faint/70 pl-1">
                                 {msg.time}
                               </span>
                             )}
@@ -96,7 +96,7 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
                   })}
                 </div>
               ) : moment.letter ? (
-                <div className="letter-paper p-4 text-[13px] leading-7 whitespace-pre-line line-clamp-6">
+                <div className="letter-paper p-4 text-[15px] leading-7 whitespace-pre-line line-clamp-8">
                   {moment.letter.content}
                 </div>
               ) : null}

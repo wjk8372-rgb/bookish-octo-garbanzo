@@ -20,28 +20,17 @@ export default function Timeline() {
         </p>
 
         <div className="relative">
-          {/* 中心轴线（桌面端） */}
-          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-amber-warm/30 to-transparent -translate-x-1/2" />
+          {/* 左侧时间轴线 */}
+          <div className="absolute left-2 md:left-4 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-amber-warm/40 to-transparent" />
 
-          <div className="space-y-10 md:space-y-14">
-            {moments.map((moment, i) => {
-              const isLeft = i % 2 === 0
-              return (
-                <div key={moment.id} className="relative">
-                  <div className="md:grid md:grid-cols-2 md:gap-10">
-                    {/* 桌面端：偶数在左，奇数在右 */}
-                    <div
-                      className={isLeft ? 'md:col-start-1 md:pr-8' : 'md:col-start-2 md:pl-8'}
-                    >
-                      <MomentCard moment={moment} index={i} />
-                    </div>
-                  </div>
-
-                  {/* 轴上的点（桌面端） */}
-                  <div className="hidden md:block absolute left-1/2 top-1/2 w-3 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-warm shadow-[0_0_10px_rgba(247,201,112,0.8)]" />
-                </div>
-              )
-            })}
+          <div className="space-y-8 md:space-y-10 pl-8 md:pl-12">
+            {moments.map((moment, i) => (
+              <div key={moment.id} className="relative">
+                {/* 轴上的点 */}
+                <div className="absolute -left-[26px] md:-left-[34px] top-6 w-3 h-3 rounded-full bg-amber-warm shadow-[0_0_10px_rgba(247,201,112,0.8)]" />
+                <MomentCard moment={moment} index={i} />
+              </div>
+            ))}
           </div>
         </div>
       </motion.div>

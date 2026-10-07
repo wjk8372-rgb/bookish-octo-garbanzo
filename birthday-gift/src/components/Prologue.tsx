@@ -32,7 +32,7 @@ export default function Prologue() {
             <div className="text-slate-400 text-lg">‹</div>
             <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden">
               <img
-                src="/images/her-avatar.jpg"
+                src="./images/her-avatar.jpg"
                 alt="怡"
                 className="w-full h-full object-cover"
               />
@@ -82,7 +82,7 @@ export default function Prologue() {
                           {msg.text}
                         </div>
                         <img
-                          src="/images/me-avatar.jpg"
+                          src="./images/me-avatar.jpg"
                           alt="我"
                           className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                         />
@@ -96,7 +96,7 @@ export default function Prologue() {
                     ) : (
                       <>
                         <img
-                          src="/images/her-avatar.jpg"
+                          src="./images/her-avatar.jpg"
                           alt="怡"
                           className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                         />

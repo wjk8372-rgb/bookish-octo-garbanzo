@@ -62,7 +62,7 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
                               {msg.text}
                             </div>
                             <img
-                              src="/images/me-avatar.jpg"
+                              src="./images/me-avatar.jpg"
                               alt="我"
                               className="w-6 h-6 rounded-full object-cover shrink-0 self-end"
                             />
@@ -76,7 +76,7 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
                         ) : (
                           <>
                             <img
-                              src="/images/her-avatar.jpg"
+                              src="./images/her-avatar.jpg"
                               alt="怡"
                               className="w-6 h-6 rounded-full object-cover shrink-0 self-end"
                             />

@@ -76,7 +76,7 @@ export default function ChatReplay() {
             <div className="text-slate-400 text-lg">‹</div>
             <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden">
               <img
-                src="/images/her-avatar.jpg"
+                src="./images/her-avatar.jpg"
                 alt="怡"
                 className="w-full h-full object-cover"
               />
@@ -132,7 +132,7 @@ export default function ChatReplay() {
                               {item.msg.text}
                             </div>
                             <img
-                              src="/images/me-avatar.jpg"
+                              src="./images/me-avatar.jpg"
                               alt="我"
                               className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                             />
@@ -146,7 +146,7 @@ export default function ChatReplay() {
                         ) : (
                           <>
                             <img
-                              src="/images/her-avatar.jpg"
+                              src="./images/her-avatar.jpg"
                               alt="怡"
                               className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                             />
@@ -179,7 +179,7 @@ export default function ChatReplay() {
             <div className="flex justify-start items-end gap-2 mt-2">
               <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden shadow-sm">
                 <img
-                  src="/images/her-avatar.jpg"
+                  src="./images/her-avatar.jpg"
                   alt="怡"
                   className="w-full h-full object-cover"
                 />

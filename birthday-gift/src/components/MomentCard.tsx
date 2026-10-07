@@ -45,43 +45,48 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
             <div className="flex-1 overflow-y-auto chat-scroll pr-1 -mr-1">
               {moment.type === 'chat' && moment.chat ? (
                 <div className="space-y-1.5">
-                  {moment.chat.map((msg, i) => (
-                    <div
-                      key={i}
-                      className={`chat-row flex ${
-                        msg.from === 'me' ? 'justify-end' : 'justify-start'
-                      } items-end gap-1.5`}
-                    >
-                      {msg.from === 'her' && (
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[10px] text-amber-950 shrink-0">
-                          怡
-                        </div>
-                      )}
-                      <div className="flex flex-col max-w-[78%]">
-                        <div
-                          className={`px-2.5 py-1.5 text-[13px] leading-relaxed ${
-                            msg.from === 'me' ? 'bubble-me' : 'bubble-her'
-                          }`}
-                        >
-                          {msg.text}
+                  {moment.chat.map((msg, i) => {
+                    const isMe = msg.from === 'me'
+                    return (
+                      <div
+                        key={i}
+                        className={`flex flex-col ${
+                          isMe ? 'items-end' : 'items-start'
+                        }`}
+                      >
+                        <div className="flex items-end gap-1.5">
+                          {!isMe && (
+                            <img
+                              src="/images/her-avatar.jpg"
+                              alt="怡"
+                              className="w-6 h-6 rounded-full object-cover shrink-0"
+                            />
+                          )}
+                          <div
+                            className={`max-w-[78%] px-2.5 py-1.5 text-[13px] leading-relaxed ${
+                              isMe ? 'bubble-me' : 'bubble-her'
+                            }`}
+                          >
+                            {msg.text}
+                          </div>
+                          {isMe && (
+                            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-[10px] text-slate-100 shrink-0">
+                              我
+                            </div>
+                          )}
                         </div>
                         {msg.time && (
                           <span
                             className={`text-[10px] text-text-faint/70 mt-0.5 ${
-                              msg.from === 'me' ? 'text-right pr-1' : 'text-left pl-1'
+                              isMe ? 'pr-8 text-right' : 'pl-8 text-left'
                             }`}
                           >
                             {msg.time}
                           </span>
                         )}
                       </div>
-                      {msg.from === 'me' && (
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-[10px] text-slate-100 shrink-0">
-                          我
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               ) : moment.letter ? (
                 <div className="letter-paper p-4 text-[13px] leading-7 whitespace-pre-line line-clamp-6">

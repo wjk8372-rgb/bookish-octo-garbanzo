@@ -30,19 +30,6 @@ export type Moment = {
 
 export const moments: Moment[] = [
   {
-    id: 1,
-    date: '2025-11-21',
-    type: 'chat',
-    title: '第一条私信',
-    summary: '那天下午，我敲下了一个字',
-    chat: [
-      { from: 'me', text: '在？', time: '15:37' },
-      { from: 'her', text: '在的！怎么啦' },
-    ],
-    note: '我盯着对话框犹豫了很久，最后只发出一个字。你回得很快，快到我以为手机出了问题。',
-    tags: ['初见', '开始'],
-  },
-  {
     id: 2,
     date: '2026-02-28',
     type: 'chat',

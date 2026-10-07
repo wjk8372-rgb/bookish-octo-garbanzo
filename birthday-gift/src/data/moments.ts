@@ -8,6 +8,7 @@ export type ChatMessage = {
   from: 'me' | 'her'
   text: string
   time?: string
+  image?: string // 贴纸/照片，直接显示图片
 }
 
 export type Letter = {
@@ -37,23 +38,23 @@ export const moments: Moment[] = [
     summary: '让你猜我的名字，结果你说出了我爹的名字……',
     chat: [
       { from: 'her', text: '我猜你四个字' },
-      { from: 'me', text: '😆' },
+      { from: 'me', text: '', image: './images/stickers/red-laugh.jpg' },
       { from: 'her', text: '对吧王者荣耀' },
-      { from: 'her', text: '😆' },
+      { from: 'her', text: '', image: './images/stickers/red-laugh.jpg' },
       { from: 'me', text: '?' },
-      { from: 'me', text: '[神经病 贴纸]' },
+      { from: 'me', text: '', image: './images/stickers/shenjingbing.jpg' },
       { from: 'me', text: '哪有人叫王者荣耀的' },
       { from: 'her', text: '姓王者荣耀也' },
       { from: 'her', text: '多好的寓意' },
-      { from: 'me', text: '[照片]' },
+      { from: 'me', text: '', image: './images/stickers/photo-glasses.jpg' },
       { from: 'me', text: '再给你一次机会' },
       { from: 'her', text: '我知道你了 王刚' },
       { from: 'me', text: '你是在暗示我什么吗' },
       { from: 'me', text: '噢噢 不对不对' },
       { from: 'me', text: '那是李刚' },
       { from: 'her', text: '笑死我了' },
-      { from: 'her', text: '刚哥 我猜对没' },
-      { from: 'me', text: '😆' },
+      { from: 'her', text: '刚哥我猜对了没' },
+      { from: 'me', text: '', image: './images/stickers/yellow-laugh.jpg' },
       { from: 'me', text: '没有！' },
       { from: 'her', text: '王强 是你了' },
       { from: 'me', text: '我滴妈呀' },
@@ -62,7 +63,7 @@ export const moments: Moment[] = [
       { from: 'her', text: '笑死我了' },
       { from: 'me', text: '我爸是我爸 我不是我爸' },
       { from: 'her', text: '你伯父叫王刚很合理啊' },
-      { from: 'her', text: '[笑死😆了 贴纸]' },
+      { from: 'her', text: '', image: './images/stickers/frog-laugh.jpg' },
     ],
     note: '你猜我叫什么，猜成了王者荣耀，又猜成王刚——那是我爸。',
     tags: ['搞笑', '名字'],

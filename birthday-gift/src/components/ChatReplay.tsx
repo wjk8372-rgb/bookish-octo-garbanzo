@@ -129,7 +129,7 @@ export default function ChatReplay() {
                         {isMe ? (
                           <>
                             <div className="max-w-[72%] justify-self-end px-3.5 py-2 text-sm leading-relaxed bubble-me self-end">
-                              {item.msg.text}
+                              {item.msg.image ? <img src={item.msg.image} alt="" className="max-w-[180px] h-auto rounded-md" /> : item.msg.text}
                             </div>
                             <img
                               src="./images/me-avatar.jpg"
@@ -151,7 +151,7 @@ export default function ChatReplay() {
                               className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                             />
                             <div className="max-w-[72%] px-3.5 py-2 text-sm leading-relaxed bubble-her self-end">
-                              {item.msg.text}
+                              {item.msg.image ? <img src={item.msg.image} alt="" className="max-w-[180px] h-auto rounded-md" /> : item.msg.text}
                             </div>
                             <span />
                             {item.msg.time && (

@@ -59,7 +59,7 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
                         {isMe ? (
                           <>
                             <div className="max-w-[78%] justify-self-end px-2.5 py-1.5 text-[13px] leading-relaxed bubble-me self-end">
-                              {msg.text}
+                              {msg.image ? <img src={msg.image} alt="" className="max-w-[140px] h-auto rounded-md" /> : msg.text}
                             </div>
                             <img
                               src="./images/me-avatar.jpg"
@@ -81,7 +81,7 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
                               className="w-6 h-6 rounded-full object-cover shrink-0 self-end"
                             />
                             <div className="max-w-[78%] px-2.5 py-1.5 text-[13px] leading-relaxed bubble-her self-end">
-                              {msg.text}
+                              {msg.image ? <img src={msg.image} alt="" className="max-w-[140px] h-auto rounded-md" /> : msg.text}
                             </div>
                             <span />
                             {msg.time && (

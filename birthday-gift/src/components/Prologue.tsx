@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion'
 
+type Msg = { from: 'me' | 'her'; text: string; time?: string; image?: string }
+
 // 序章：第一次交流的 4 条聊天记录
-const messages = [
+const messages: Msg[] = [
   { from: 'her', text: '思想很深刻', time: '15:37' },
   { from: 'her', text: '我对你表示欣赏', time: '15:37' },
   { from: 'me', text: '谢谢 你能理解到深刻，或许你也是一个求真的人', time: '15:54' },
@@ -78,8 +80,8 @@ export default function Prologue() {
                   >
                     {isMe ? (
                       <>
-                        <div className="max-w-[72%] justify-self-end px-3.5 py-2 text-sm leading-relaxed bubble-me self-end">
-                          {msg.text}
+                        <div className={`max-w-[72%] justify-self-end self-end ${msg.image ? '' : 'px-3.5 py-2 bubble-me'}`}>
+                          {msg.image ? <img src={msg.image} alt="" className="w-[120px] h-auto rounded-lg" /> : <span className="text-sm leading-relaxed">{msg.text}</span>}
                         </div>
                         <img
                           src="./images/me-avatar.jpg"
@@ -100,8 +102,8 @@ export default function Prologue() {
                           alt="怡"
                           className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                         />
-                        <div className="max-w-[72%] px-3.5 py-2 text-sm leading-relaxed bubble-her self-end">
-                          {msg.text}
+                        <div className={`max-w-[72%] self-end ${msg.image ? '' : 'px-3.5 py-2 bubble-her'}`}>
+                          {msg.image ? <img src={msg.image} alt="" className="w-[120px] h-auto rounded-lg" /> : <span className="text-sm leading-relaxed">{msg.text}</span>}
                         </div>
                         <span />
                         {showTime && (

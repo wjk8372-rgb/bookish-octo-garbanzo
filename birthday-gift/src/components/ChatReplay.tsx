@@ -128,8 +128,8 @@ export default function ChatReplay() {
                       >
                         {isMe ? (
                           <>
-                            <div className="max-w-[72%] justify-self-end px-3.5 py-2 text-sm leading-relaxed bubble-me self-end">
-                              {item.msg.image ? <img src={item.msg.image} alt="" className="max-w-[180px] h-auto rounded-md" /> : item.msg.text}
+                            <div className={`max-w-[72%] justify-self-end self-end ${item.msg.image ? '' : 'px-3.5 py-2 bubble-me'}`}>
+                              {item.msg.image ? <img src={item.msg.image} alt="" className="w-[120px] h-auto rounded-lg" /> : <span className="text-sm leading-relaxed">{item.msg.text}</span>}
                             </div>
                             <img
                               src="./images/me-avatar.jpg"
@@ -150,8 +150,8 @@ export default function ChatReplay() {
                               alt="怡"
                               className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                             />
-                            <div className="max-w-[72%] px-3.5 py-2 text-sm leading-relaxed bubble-her self-end">
-                              {item.msg.image ? <img src={item.msg.image} alt="" className="max-w-[180px] h-auto rounded-md" /> : item.msg.text}
+                            <div className={`max-w-[72%] self-end ${item.msg.image ? '' : 'px-3.5 py-2 bubble-her'}`}>
+                              {item.msg.image ? <img src={item.msg.image} alt="" className="w-[120px] h-auto rounded-lg" /> : <span className="text-sm leading-relaxed">{item.msg.text}</span>}
                             </div>
                             <span />
                             {item.msg.time && (

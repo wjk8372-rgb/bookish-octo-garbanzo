@@ -30,8 +30,12 @@ export default function Prologue() {
           {/* 顶栏 */}
           <div className="flex items-center gap-3 px-4 py-3 bg-[#2b2a35]">
             <div className="text-slate-400 text-lg">‹</div>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[12px] text-amber-950 font-medium shrink-0">
-              怡
+            <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden">
+              <img
+                src="/images/her-avatar.jpg"
+                alt="怡"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm text-slate-100 font-medium truncate">陈若怡</div>
@@ -66,37 +70,41 @@ export default function Prologue() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: i * 0.15 }}
-                    className={`chat-row flex ${
-                      isMe ? 'justify-end' : 'justify-start'
-                    } items-end gap-2`}
+                    className={`flex flex-col ${
+                      isMe ? 'items-end' : 'items-start'
+                    }`}
                   >
-                    {!isMe && (
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[12px] text-amber-950 font-medium shrink-0 shadow-sm">
-                        怡
-                      </div>
-                    )}
-                    <div className="flex flex-col max-w-[72%]">
+                    <div className="flex items-end gap-2">
+                      {!isMe && (
+                        <img
+                          src="/images/her-avatar.jpg"
+                          alt="怡"
+                          className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm"
+                        />
+                      )}
                       <div
-                        className={`px-3.5 py-2 text-sm leading-relaxed ${
+                        className={`max-w-[72%] px-3.5 py-2 text-sm leading-relaxed ${
                           isMe ? 'bubble-me' : 'bubble-her'
                         }`}
                       >
                         {msg.text}
                       </div>
-                      {showTime && (
-                        <span
-                          className={`text-[10px] text-slate-500/80 mt-0.5 ${
-                            isMe ? 'text-right pr-1' : 'text-left pl-1'
-                          }`}
-                        >
-                          {msg.time}
-                        </span>
+                      {isMe && (
+                        <img
+                          src="/images/me-avatar.jpg"
+                          alt="我"
+                          className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm"
+                        />
                       )}
                     </div>
-                    {isMe && (
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-[12px] text-slate-100 font-medium shrink-0 shadow-sm">
-                        我
-                      </div>
+                    {showTime && (
+                      <span
+                        className={`text-[10px] text-slate-500/80 mt-0.5 ${
+                          isMe ? 'pr-10 text-right' : 'pl-10 text-left'
+                        }`}
+                      >
+                        {msg.time}
+                      </span>
                     )}
                   </motion.div>
                 )

@@ -74,8 +74,12 @@ export default function ChatReplay() {
           {/* 顶栏：模拟聊天 App */}
           <div className="flex items-center gap-3 px-4 py-3 bg-[#2b2a35]">
             <div className="text-slate-400 text-lg">‹</div>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[12px] text-amber-950 font-medium shrink-0">
-              怡
+            <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden">
+              <img
+                src="/images/her-avatar.jpg"
+                alt="怡"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm text-slate-100 font-medium truncate">陈若怡</div>
@@ -112,40 +116,49 @@ export default function ChatReplay() {
                       </div>
                     )}
 
-                  <div
-                    className={`chat-row flex ${
-                      item.msg.from === 'me' ? 'justify-end' : 'justify-start'
-                    } items-end gap-2 mb-1.5`}
-                  >
-                    {item.msg.from === 'her' && (
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[12px] text-amber-950 font-medium shrink-0 shadow-sm">
-                        怡
-                      </div>
-                    )}
-                    <div className="flex flex-col max-w-[72%]">
+                  {(() => {
+                    const isMe = item.msg.from === 'me'
+                    return (
                       <div
-                        className={`px-3.5 py-2 text-sm leading-relaxed ${
-                          item.msg.from === 'me' ? 'bubble-me' : 'bubble-her'
-                        }`}
+                        className={`flex flex-col ${
+                          isMe ? 'items-end' : 'items-start'
+                        } mb-1.5`}
                       >
-                        {item.msg.text}
+                        <div className="flex items-end gap-2">
+                          {!isMe && (
+                            <img
+                              src="/images/her-avatar.jpg"
+                              alt="怡"
+                              className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm"
+                            />
+                          )}
+                          <div
+                            className={`max-w-[72%] px-3.5 py-2 text-sm leading-relaxed ${
+                              isMe ? 'bubble-me' : 'bubble-her'
+                            }`}
+                          >
+                            {item.msg.text}
+                          </div>
+                          {isMe && (
+                            <img
+                              src="/images/me-avatar.jpg"
+                              alt="我"
+                              className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm"
+                            />
+                          )}
+                        </div>
+                        {item.msg.time && (
+                          <span
+                            className={`text-[10px] text-slate-500/80 mt-0.5 ${
+                              isMe ? 'pr-10 text-right' : 'pl-10 text-left'
+                            }`}
+                          >
+                            {item.msg.time}
+                          </span>
+                        )}
                       </div>
-                      {item.msg.time && (
-                        <span
-                          className={`text-[10px] text-slate-500/80 mt-0.5 ${
-                            item.msg.from === 'me' ? 'text-right pr-1' : 'text-left pl-1'
-                          }`}
-                        >
-                          {item.msg.time}
-                        </span>
-                      )}
-                    </div>
-                    {item.msg.from === 'me' && (
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-[12px] text-slate-100 font-medium shrink-0 shadow-sm">
-                        我
-                      </div>
-                    )}
-                  </div>
+                    )
+                  })()}
 
                   {item.narration && (
                     <p className="mt-2 mb-4 text-center text-[12px] text-slate-600 italic font-kai">
@@ -159,8 +172,12 @@ export default function ChatReplay() {
 
           {visibleCount < items.length && (
             <div className="flex justify-start items-end gap-2 mt-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-[12px] text-amber-950 font-medium shrink-0 shadow-sm">
-                怡
+              <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden shadow-sm">
+                <img
+                  src="/images/her-avatar.jpg"
+                  alt="怡"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="bubble-her px-3.5 py-2.5 flex gap-1">
                 {[0, 1, 2].map((d) => (

@@ -70,9 +70,11 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
                             {msg.text}
                           </div>
                           {isMe && (
-                            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-slate-500 to-slate-700 flex items-center justify-center text-[10px] text-slate-100 shrink-0">
-                              我
-                            </div>
+                            <img
+                              src="/images/me-avatar.jpg"
+                              alt="我"
+                              className="w-6 h-6 rounded-full object-cover shrink-0"
+                            />
                           )}
                         </div>
                         {msg.time && (

@@ -59,12 +59,12 @@ export const moments: Moment[] = [
     date: '2025-11-21',
     type: 'chat',
     title: '你好啊',
-    summary: '互相关注后，她发来的第一条消息是一只挥手的小白人',
+    summary: '互相关注后，你发来的第一条消息是一只挥手的小白人',
     chat: [
       { from: 'her', text: '', image: './images/stickers/her-hello.png', time: '14:46' },
       { from: 'me', text: '', image: './images/stickers/mine-hello.png', time: '15:37' },
     ],
-    note: '2025年11月21日，我们互相关注。她先发来一只挥着小手的小白人说"你好啊"，我回了一只穿西装的猫也说"你好"。两条表情包，就是我们故事的开头。',
+    note: '2025年11月21日，我们互相关注。你先发来一只挥着小手的小白人说"你好啊"，我回了一只穿西装的猫也说"你好"。两条表情包，就是我们故事的开头。',
     tags: ['初遇', '你好', '表情包'],
   },
   {
@@ -128,7 +128,7 @@ export const moments: Moment[] = [
       { from: 'me', text: '我要先睡觉啦' },
       { from: 'me', text: '玩得开心' },
     ],
-    note: '她发了三个哭脸，说"我真的好感动"。我盯着屏幕看了很久。原来"幸运"这两个字，从她嘴里说出来，和我自己说出来，重量完全不一样。',
+    note: '你发了三个哭脸，说"我真的好感动"。我盯着屏幕看了很久。原来"幸运"这两个字，从你嘴里说出来，和我自己说出来，重量完全不一样。',
     tags: ['幸运', '温柔'],
   },
   {
@@ -167,10 +167,10 @@ export const moments: Moment[] = [
     id: 4,
     date: '2026-05-28',
     type: 'letter',
-    title: '她的回信',
+    title: '你的回信',
     summary: '你说，你也愿意',
     letter: {
-      title: '她的回信',
+      title: '你的回信',
       from: 'her',
       content: `我认真看完了你写的这些。
 
@@ -232,7 +232,7 @@ export const moments: Moment[] = [
 
 7.22`,
     },
-    note: '这几段话我写了好几天，写了又删，删了又写。最后还是决定发给她。',
+    note: '这几段话我写了好几天，写了又删，删了又写。最后还是决定发给你。',
     tags: ['承诺', '现实', '网恋', '救赎'],
   },
   {
@@ -268,7 +268,7 @@ export const moments: Moment[] = [
     date: '2026-08-03',
     type: 'letter',
     title: '原谅我的怯懦',
-    summary: '她说，舒适区就在这方寸之屏里边',
+    summary: '你说，舒适区就在这方寸之屏里边',
     letter: {
       title: '原谅我的怯懦',
       from: 'her',
@@ -284,7 +284,7 @@ export const moments: Moment[] = [
 
 抱歉，原谅我的怯懦。`,
     },
-    note: '看到"原谅我的怯懦"那一句，我突然懂了她所有的犹豫。',
+    note: '看到"原谅我的怯懦"那一句，我突然懂了你所有的犹豫。',
     tags: ['怯懦', '方寸之屏', 'soulmate'],
   },
   {
@@ -314,7 +314,7 @@ export const moments: Moment[] = [
     date: '2026-08-04',
     type: 'letter',
     title: '我爱你',
-    summary: '凌晨两点四十六，她的三个字',
+    summary: '凌晨两点四十六，你的三个字',
     letter: {
       title: '我爱你',
       from: 'her',
@@ -330,7 +330,7 @@ export const moments: Moment[] = [
 
 我爱你。`,
     },
-    note: '"我爱你"三个字，她在最不该说的时候说了出来。那一夜我没睡。',
+    note: '"我爱你"三个字，你在最不该说的时候说了出来。那一夜我没睡。',
     tags: ['我爱你', '窄门', '阿丽莎'],
   },
   {
@@ -338,7 +338,7 @@ export const moments: Moment[] = [
     date: '2026-09-18',
     type: 'chat',
     title: '因为有你在，一加一就大于了二',
-    summary: '凌晨三四点的对话，她说和我内心的声音达成共振就是一加一大于二',
+    summary: '凌晨三四点的对话，你说和我内心的声音达成共振就是一加一大于二',
     chat: [
       { from: 'me', text: '嗯呢 你说得对' },
       { from: 'me', text: '不知道为什么，虽然在跟你说之前我就觉得我应该这样做' },
@@ -358,7 +358,7 @@ export const moments: Moment[] = [
       { from: 'her', text: '因为你值得' },
       { from: 'me', text: '', image: './images/stickers/doraemon-cry.png' },
     ],
-    note: '凌晨三四点，她说"和你内心的声音达成共振就是一加一大于二"。那一刻我发了张狗的表情包，假装轻松，但其实心里已经哭成哆啦A梦了。',
+    note: '凌晨三四点，你说"和我内心的声音达成共振就是一加一大于二"。那一刻我发了张狗的表情包，假装轻松，但其实心里已经哭成哆啦A梦了。',
     tags: ['共振', '深夜', '有你真好'],
   },
 ]

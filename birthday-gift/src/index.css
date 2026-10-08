@@ -181,8 +181,8 @@ body {
 
 /* ---------- Chat bubbles ---------- */
 .bubble-me {
-  background: #f7c970;
-  color: #1a1206;
+  background: #33CCCC;
+  color: #0a2a2a;
   border-radius: 18px 18px 4px 18px;
   position: relative;
   word-break: break-word;
@@ -197,7 +197,7 @@ body {
   height: 0;
   border-style: solid;
   border-width: 5px 0 5px 6px;
-  border-color: transparent transparent transparent #f7c970;
+  border-color: transparent transparent transparent #33CCCC;
 }
 
 .bubble-her {

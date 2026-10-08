@@ -54,6 +54,19 @@ export type Moment = {
 
 export const moments: Moment[] = [
   {
+    id: 0,
+    date: '2025-11-21',
+    type: 'chat',
+    title: '你好啊',
+    summary: '互相关注后，她发来的第一条消息是一只挥手的小白人',
+    chat: [
+      { from: 'her', text: '', image: './images/stickers/her-hello.png', time: '14:46' },
+      { from: 'me', text: '', image: './images/stickers/mine-hello.png', time: '15:37' },
+    ],
+    note: '2025年11月21日，我们互相关注。她先发来一只挥着小手的小白人说"你好啊"，我回了一只穿西装的猫也说"你好"。两条表情包，就是我们故事的开头。',
+    tags: ['初遇', '你好', '表情包'],
+  },
+  {
     id: 1,
     date: '2025-12-02',
     type: 'chat',

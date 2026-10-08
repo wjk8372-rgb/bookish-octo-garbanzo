@@ -97,6 +97,19 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
                 </div>
               ) : moment.letter ? (
                 <div className="letter-paper p-4 text-[15px] leading-7 whitespace-pre-line line-clamp-8">
+                  {moment.letter.images && moment.letter.images.length > 0 && (
+                    <div className={`mb-3 flex ${moment.letter.images.length > 1 ? 'flex-col gap-2' : ''}`}>
+                      {moment.letter.images.map((src, i) => (
+                        <img
+                          key={i}
+                          src={src}
+                          alt={`信件截图 ${i + 1}`}
+                          className="w-full h-auto rounded-lg border border-amber-warm/20 object-contain"
+                          loading="lazy"
+                        />
+                      ))}
+                    </div>
+                  )}
                   {moment.letter.content}
                 </div>
               ) : null}

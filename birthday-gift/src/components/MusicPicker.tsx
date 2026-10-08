@@ -150,20 +150,20 @@ export default function MusicPicker({ bgm }: MusicPickerProps) {
             </div>
 
             {/* 播放控制 */}
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center gap-2 mb-3">
               <button
                 onClick={bgm.toggle}
-                className="w-9 h-9 rounded-full bg-amber-warm/15 border border-amber-warm/30 text-amber-warm flex items-center justify-center hover:bg-amber-warm/25 transition-colors"
+                className="w-9 h-9 rounded-lg bg-amber-warm/15 border border-amber-warm/30 text-amber-warm flex items-center justify-center hover:bg-amber-warm/25 transition-colors text-sm"
                 aria-label={bgm.isPlaying ? '暂停' : '播放'}
               >
                 {bgm.isPlaying ? '❚❚' : '▶'}
               </button>
               <button
                 onClick={bgm.cycleRepeatMode}
-                className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+                className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors text-base ${
                   bgm.repeatMode === 'single'
-                    ? 'bg-amber-warm/20 border border-amber-warm/40 text-amber-warm'
-                    : 'bg-night-600/60 text-text-dim hover:text-amber-soft'
+                    ? 'bg-amber-warm/15 border border-amber-warm/30 text-amber-warm'
+                    : 'bg-night-600/60 border border-night-500/40 text-text-dim hover:text-amber-soft hover:border-amber-dim/40'
                 }`}
                 aria-label={bgm.repeatMode === 'single' ? '单曲循环' : '轮流播放'}
                 title={bgm.repeatMode === 'single' ? '单曲循环' : '轮流播放'}
@@ -172,7 +172,7 @@ export default function MusicPicker({ bgm }: MusicPickerProps) {
               </button>
               <button
                 onClick={bgm.toggleMute}
-                className="w-9 h-9 rounded-full bg-night-600/60 text-text-dim flex items-center justify-center hover:text-amber-soft transition-colors"
+                className="w-9 h-9 rounded-lg bg-night-600/60 border border-night-500/40 text-text-dim flex items-center justify-center hover:text-amber-soft hover:border-amber-dim/40 transition-colors text-sm"
                 aria-label={bgm.isMuted ? '取消静音' : '静音'}
               >
                 {bgm.isMuted ? '🔇' : '🔊'}

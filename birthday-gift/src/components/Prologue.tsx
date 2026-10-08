@@ -127,7 +127,7 @@ export default function Prologue() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="mt-14 text-center font-kai text-text-dim text-base md:text-xl max-w-2xl mx-auto italic"
         >
-          这是我们的第一次交流，也是我们关系的开始，当时有一种宿命感，这似乎预示着什么。
+          两条永不相交的平行线，却在命运的纸页上，被同一滴墨，轻轻晕上了一个交点。
         </motion.p>
       </motion.div>
     </section>

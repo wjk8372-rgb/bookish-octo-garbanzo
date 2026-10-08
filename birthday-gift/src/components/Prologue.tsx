@@ -15,8 +15,7 @@ export default function Prologue() {
     <section id="prologue" className="relative py-24 md:py-36 px-6">
       <motion.div
         initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, amount: 0.3 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
         className="max-w-2xl mx-auto"
       >

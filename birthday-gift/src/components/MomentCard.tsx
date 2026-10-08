@@ -44,7 +44,7 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
 
             <div className="flex-1 overflow-y-auto chat-scroll chat-window-bg rounded-xl p-2 -mr-1">
               {moment.type === 'chat' && moment.chat ? (
-                <div className="space-y-1.5">
+                <div className="min-h-full flex flex-col justify-center space-y-1.5">
                   {moment.chat.map((msg, i) => {
                     const isMe = msg.from === 'me'
                     return (

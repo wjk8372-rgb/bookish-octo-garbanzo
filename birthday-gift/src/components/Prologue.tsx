@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { getHerAvatar } from '../data/moments'
+import { getHerAvatar, getMeAvatar } from '../data/moments'
 
 type Msg = { from: 'me' | 'her'; text: string; time?: string; image?: string }
 
@@ -84,7 +84,7 @@ export default function Prologue() {
                           {msg.image ? <img src={msg.image} alt="" className="w-[120px] h-auto rounded-lg" /> : <span className="text-sm leading-relaxed">{msg.text}</span>}
                         </div>
                         <img
-                          src="./images/me-avatar.jpg"
+                          src={getMeAvatar('2025-11-21')}
                           alt="我"
                           className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                         />

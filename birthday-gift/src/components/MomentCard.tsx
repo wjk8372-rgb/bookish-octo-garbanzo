@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import type { Moment } from '../data/moments'
-import { getHerAvatar } from '../data/moments'
+import { getHerAvatar, getMeAvatar } from '../data/moments'
 import { formatDate } from '../utils/date'
 
 type MomentCardProps = {
@@ -62,7 +62,7 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
                               {msg.image ? <img src={msg.image} alt="" className="w-[110px] h-auto rounded-lg" /> : <span className="text-[15px] leading-relaxed">{msg.text}</span>}
                             </div>
                             <img
-                              src="./images/me-avatar.jpg"
+                              src={getMeAvatar(moment.date)}
                               alt="我"
                               className="w-8 h-8 rounded-full object-cover shrink-0 self-end"
                             />

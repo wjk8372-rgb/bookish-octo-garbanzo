@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { moments, type ChatMessage, getHerAvatar } from '../data/moments'
+import { moments, type ChatMessage, getHerAvatar, getMeAvatar } from '../data/moments'
 import { formatDate } from '../utils/date'
 
 type ChatItem = {
@@ -132,7 +132,7 @@ export default function ChatReplay() {
                               {item.msg.image ? <img src={item.msg.image} alt="" className="w-[120px] h-auto rounded-lg" /> : <span className="text-sm leading-relaxed">{item.msg.text}</span>}
                             </div>
                             <img
-                              src="./images/me-avatar.jpg"
+                              src={getMeAvatar(item.date)}
                               alt="我"
                               className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                             />

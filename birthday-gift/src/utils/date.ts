@@ -13,7 +13,9 @@ export function daysToAnniversary(from: string = BIRTHDAY): number {
 }
 
 export function formatDate(date: string): string {
-  return dayjs(date).format('YYYY.MM.DD')
+  const d = dayjs(date)
+  const hasTime = d.hour() !== 0 || d.minute() !== 0
+  return hasTime ? d.format('YYYY.MM.DD HH:mm') : d.format('YYYY.MM.DD')
 }
 
 export const CONSTS = {

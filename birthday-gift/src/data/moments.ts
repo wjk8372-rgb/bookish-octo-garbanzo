@@ -392,7 +392,7 @@ export const moments: Moment[] = [
     date: '2026-09-18',
     type: 'chat',
     title: '因为有你在，一加一就大于了二',
-    summary: '凌晨三四点的对话，你说和我内心的声音达成共振就是一加一大于二',
+    summary: '你说和我内心的声音达成共振一加一就大于了二',
     chat: [
       { from: 'me', text: '嗯呢 你说得对' },
       { from: 'me', text: '不知道为什么，虽然在跟你说之前我就觉得我应该这样做' },

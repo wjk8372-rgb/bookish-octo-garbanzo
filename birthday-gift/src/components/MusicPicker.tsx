@@ -160,7 +160,7 @@ export default function MusicPicker({ bgm }: MusicPickerProps) {
               </button>
               <button
                 onClick={bgm.cycleRepeatMode}
-                className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors text-base ${
+                className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors text-sm font-bold ${
                   bgm.repeatMode === 'single'
                     ? 'bg-amber-warm/15 border border-amber-warm/30 text-amber-warm'
                     : 'bg-night-600/60 border border-night-500/40 text-text-dim hover:text-amber-soft hover:border-amber-dim/40'
@@ -168,14 +168,14 @@ export default function MusicPicker({ bgm }: MusicPickerProps) {
                 aria-label={bgm.repeatMode === 'single' ? '单曲循环' : '轮流播放'}
                 title={bgm.repeatMode === 'single' ? '单曲循环' : '轮流播放'}
               >
-                {bgm.repeatMode === 'single' ? '🔂' : '🔁'}
+                {bgm.repeatMode === 'single' ? '⟲1' : '⟳'}
               </button>
               <button
                 onClick={bgm.toggleMute}
                 className="w-9 h-9 rounded-lg bg-night-600/60 border border-night-500/40 text-text-dim flex items-center justify-center hover:text-amber-soft hover:border-amber-dim/40 transition-colors text-sm"
                 aria-label={bgm.isMuted ? '取消静音' : '静音'}
               >
-                {bgm.isMuted ? '🔇' : '🔊'}
+                {bgm.isMuted ? '♪̸' : '♪'}
               </button>
               <span className="text-xs text-text-faint ml-auto">
                 {fmt(bgm.volume)}%

@@ -3,6 +3,19 @@ export const START_DATE = '2025-11-21' // 第一条私信
 export const BIRTHDAY = '2026-10-13' // 你的生日
 export const ANNIVERSARY = '2026-11-21' // 一周年
 
+// ── 头像规则 ──
+// 5月11号之前：原始头像
+// 5月11号 ~ 8月3号：第二个头像
+// 8月4号之后：第三个头像
+const AVATAR_CUTOFF_1 = '2026-05-11'
+const AVATAR_CUTOFF_2 = '2026-08-04'
+
+export function getHerAvatar(date: string): string {
+  if (date >= AVATAR_CUTOFF_2) return './images/her-avatar-aug.jpg'
+  if (date >= AVATAR_CUTOFF_1) return './images/her-avatar-may.jpg'
+  return './images/her-avatar.jpg'
+}
+
 // ── 类型定义 ──
 export type ChatMessage = {
   from: 'me' | 'her'

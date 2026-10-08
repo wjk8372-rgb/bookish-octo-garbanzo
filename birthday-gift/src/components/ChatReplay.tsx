@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { moments, type ChatMessage } from '../data/moments'
+import { moments, type ChatMessage, getHerAvatar } from '../data/moments'
 import { formatDate } from '../utils/date'
 
 type ChatItem = {
@@ -76,7 +76,7 @@ export default function ChatReplay() {
             <div className="text-slate-400 text-lg">‹</div>
             <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden">
               <img
-                src="./images/her-avatar.jpg"
+                src={getHerAvatar(items[0]?.date ?? '2025-11-21')}
                 alt="怡"
                 className="w-full h-full object-cover"
               />
@@ -146,7 +146,7 @@ export default function ChatReplay() {
                         ) : (
                           <>
                             <img
-                              src="./images/her-avatar.jpg"
+                              src={getHerAvatar(item.date)}
                               alt="怡"
                               className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                             />
@@ -179,7 +179,7 @@ export default function ChatReplay() {
             <div className="flex justify-start items-end gap-2 mt-2">
               <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden shadow-sm">
                 <img
-                  src="./images/her-avatar.jpg"
+                  src={getHerAvatar(items[visibleCount]?.date ?? items[items.length-1]?.date ?? '2026-01-01')}
                   alt="怡"
                   className="w-full h-full object-cover"
                 />

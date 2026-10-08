@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { moments } from '../data/moments'
 import { formatDate } from '../utils/date'
@@ -6,24 +6,28 @@ import { formatDate } from '../utils/date'
 function useTypewriter(text: string, speed = 45, start = false) {
   const [shown, setShown] = useState('')
   const [done, setDone] = useState(false)
+  const timerRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (!start) return
     setShown('')
     setDone(false)
     let i = 0
-    const timer = window.setInterval(() => {
+    timerRef.current = window.setInterval(() => {
       i += 1
       setShown(text.slice(0, i))
       if (i >= text.length) {
-        window.clearInterval(timer)
+        if (timerRef.current) window.clearInterval(timerRef.current)
         setDone(true)
       }
     }, speed)
-    return () => window.clearInterval(timer)
+    return () => {
+      if (timerRef.current) window.clearInterval(timerRef.current)
+    }
   }, [text, speed, start])
 
   const skip = () => {
+    if (timerRef.current) window.clearInterval(timerRef.current)
     setShown(text)
     setDone(true)
   }
@@ -148,7 +152,7 @@ function EnvelopeCard({
                         }}
                         className="text-xs px-3 py-1 rounded-full border border-amber-800/30 text-amber-900/70 hover:bg-amber-800/10 hover:text-amber-900 transition-colors"
                       >
-                        快速展开全文 ↓
+                        展开原文 ↓
                       </button>
                     ) : <span />}
                     <button

@@ -81,7 +81,7 @@ export default function Prologue() {
                     {isMe ? (
                       <>
                         <div className={`max-w-[72%] justify-self-end self-end ${msg.image ? '' : 'px-3.5 py-2 bubble-me'}`}>
-                          {msg.image ? <img src={msg.image} alt="" className="w-[120px] h-auto rounded-lg" /> : <span className="text-sm leading-relaxed">{msg.text}</span>}
+                          {msg.image ? <img src={msg.image} alt="" className="w-[120px] h-auto" /> : <span className="text-sm leading-relaxed">{msg.text}</span>}
                         </div>
                         <img
                           src={getMeAvatar('2025-11-21')}
@@ -103,7 +103,7 @@ export default function Prologue() {
                           className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm self-end"
                         />
                         <div className={`max-w-[72%] self-end ${msg.image ? '' : 'px-3.5 py-2 bubble-her'}`}>
-                          {msg.image ? <img src={msg.image} alt="" className="w-[120px] h-auto rounded-lg" /> : <span className="text-sm leading-relaxed">{msg.text}</span>}
+                          {msg.image ? <img src={msg.image} alt="" className="w-[120px] h-auto" /> : <span className="text-sm leading-relaxed">{msg.text}</span>}
                         </div>
                         <span />
                         {showTime && (

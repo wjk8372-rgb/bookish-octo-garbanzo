@@ -42,7 +42,7 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
             </h3>
             <p className="text-text-faint text-sm mb-4">{moment.summary}</p>
 
-            <div className="flex-1 overflow-y-auto chat-scroll pr-1 -mr-1">
+            <div className="flex-1 overflow-y-auto chat-scroll chat-window-bg rounded-xl p-2 -mr-1">
               {moment.type === 'chat' && moment.chat ? (
                 <div className="space-y-1.5">
                   {moment.chat.map((msg, i) => {

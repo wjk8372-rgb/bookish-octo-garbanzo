@@ -71,8 +71,8 @@ export const moments: Moment[] = [
     id: 1,
     date: '2025-12-02',
     type: 'chat',
-    title: '你猜出了我爸的名字',
-    summary: '让你猜我的名字，结果你说出了我爹的名字……',
+    title: '那天让你猜我的名字',
+    summary: '结果你猜出了……',
     chat: [
       { from: 'her', text: '我猜你四个字' },
       { from: 'me', text: '', image: './images/stickers/red-laugh.png' },

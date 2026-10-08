@@ -23,7 +23,7 @@ export default function Timeline() {
           <div className="absolute left-2 md:left-4 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-amber-warm/40 to-transparent" />
 
           <div className="space-y-8 md:space-y-10 pl-8 md:pl-12">
-            {moments.map((moment, i) => (
+            {moments.filter((m) => m.type === 'chat').map((moment, i) => (
               <div key={moment.id} className="relative">
                 {/* 轴上的点 */}
                 <div className="absolute -left-[26px] md:-left-[34px] top-6 w-3 h-3 rounded-full bg-amber-warm shadow-[0_0_10px_rgba(247,201,112,0.8)]" />

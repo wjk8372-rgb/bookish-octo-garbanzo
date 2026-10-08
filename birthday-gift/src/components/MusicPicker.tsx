@@ -124,6 +124,31 @@ export default function MusicPicker({ bgm }: MusicPickerProps) {
               })}
             </div>
 
+            {/* 快速跳转 */}
+            <div className="mb-4">
+              <p className="text-[11px] text-text-faint mb-2">快速跳转</p>
+              <div className="grid grid-cols-2 gap-1.5">
+                {[
+                  { id: 'hero', label: '开场' },
+                  { id: 'timeline', label: '时间线' },
+                  { id: 'letter', label: '信件' },
+                  { id: 'footer', label: '结尾' },
+                ].map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() =>
+                      document
+                        .getElementById(s.id)
+                        ?.scrollIntoView({ behavior: 'smooth' })
+                    }
+                    className="px-2 py-1.5 rounded-lg text-xs text-text-dim hover:bg-night-600/50 hover:text-amber-soft transition-colors border border-amber-warm/10"
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* 播放控制 */}
             <div className="flex items-center gap-3 mb-3">
               <button

@@ -3,12 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { moments } from '../data/moments'
 import { formatDate } from '../utils/date'
 
-function useTypewriter(text: string, speed = 45, start = false) {
+function useTypewriter(text: string, speed = 45, start = false, skipInitial = false) {
   const [shown, setShown] = useState('')
   const [done, setDone] = useState(false)
 
   useEffect(() => {
     if (!start) return
+    if (skipInitial) {
+      setShown(text)
+      setDone(true)
+      return
+    }
     setShown('')
     setDone(false)
     let i = 0
@@ -21,7 +26,7 @@ function useTypewriter(text: string, speed = 45, start = false) {
       }
     }, speed)
     return () => window.clearInterval(timer)
-  }, [text, speed, start])
+  }, [text, speed, start, skipInitial])
 
   const skip = () => {
     setShown(text)
@@ -45,7 +50,8 @@ function EnvelopeCard({
   index: number
 }) {
   const [open, setOpen] = useState(false)
-  const { shown, done, skip } = useTypewriter(content, 40, open)
+  const [skipTypewriter, setSkipTypewriter] = useState(false)
+  const { shown, done, skip } = useTypewriter(content, 40, open, skipTypewriter)
 
   const isFromHer = from === 'her'
 
@@ -109,6 +115,17 @@ function EnvelopeCard({
                     点击拆开
                     <span className="inline-block w-8 h-px bg-amber-900/20" />
                   </p>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setSkipTypewriter(true)
+                      setOpen(true)
+                    }}
+                    className="mt-5 mx-auto block text-xs px-4 py-1.5 rounded-full border border-amber-800/30 text-amber-900/70 hover:bg-amber-800/10 hover:text-amber-900 transition-colors"
+                  >
+                    快速展开全文 ↓
+                  </button>
                 </motion.div>
               )}
             </AnimatePresence>

@@ -5,18 +5,22 @@ import { tracks, type Track } from '../data/tracks'
 const FADE_MS = 1200
 const DUCK_VOLUME = 0.05
 
+export type RepeatMode = 'single' | 'sequence'
+
 export type BgmState = {
   tracks: Track[]
   currentTrack: Track | null
   isPlaying: boolean
   volume: number
   isMuted: boolean
+  repeatMode: RepeatMode
   selectTrack: (id: string) => void
   play: () => void
   pause: () => void
   toggle: () => void
   setVolume: (v: number) => void
   toggleMute: () => void
+  cycleRepeatMode: () => void
   duck: () => void
   unduck: () => void
 }
@@ -26,6 +30,9 @@ export function useBgm(): BgmState {
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolumeState] = useState(0.25)
   const [isMuted, setIsMuted] = useState(false)
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>('sequence')
+
+  const repeatModeRef = useRef<RepeatMode>('sequence')
 
   const howlRef = useRef<Howl | null>(null)
   const currentTrackRef = useRef<Track | null>(null)
@@ -58,7 +65,7 @@ export function useBgm(): BgmState {
       const howl = new Howl({
         src: [track.src],
         html5: true,
-        loop: true,
+        loop: repeatModeRef.current === 'single',
         volume: 0,
         preload: true,
       })
@@ -69,10 +76,22 @@ export function useBgm(): BgmState {
       howl.on('playerror', () => {
         setIsPlaying(false)
       })
+      howl.on('end', () => {
+        if (repeatModeRef.current === 'sequence') {
+          const idx = tracks.findIndex((t) => t.id === track.id)
+          const next = tracks[(idx + 1) % tracks.length]
+          if (next) {
+            currentTrackRef.current = next
+            setCurrentId(next.id)
+            const nextVol = isMuted ? 0 : targetVolumeRef.current * next.volume
+            playTrack(next, nextVol)
+          }
+        }
+      })
       howl.play()
       setIsPlaying(true)
     },
-    [stopCurrent],
+    [isMuted, stopCurrent],
   )
 
   const selectTrack = useCallback(
@@ -170,6 +189,22 @@ export function useBgm(): BgmState {
     })
   }, [])
 
+  const cycleRepeatMode = useCallback(() => {
+    setRepeatMode((m) => {
+      const next: RepeatMode = m === 'single' ? 'sequence' : 'single'
+      repeatModeRef.current = next
+      const h = howlRef.current
+      if (h) {
+        try {
+          h.loop(next === 'single')
+        } catch {
+          /* noop */
+        }
+      }
+      return next
+    })
+  }, [])
+
   const duck = useCallback(() => {
     isDuckedRef.current = true
     const h = howlRef.current
@@ -208,12 +243,14 @@ export function useBgm(): BgmState {
     isPlaying,
     volume,
     isMuted,
+    repeatMode,
     selectTrack,
     play,
     pause,
     toggle,
     setVolume,
     toggleMute,
+    cycleRepeatMode,
     duck,
     unduck,
   }

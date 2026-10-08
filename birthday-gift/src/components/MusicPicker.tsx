@@ -159,6 +159,18 @@ export default function MusicPicker({ bgm }: MusicPickerProps) {
                 {bgm.isPlaying ? '❚❚' : '▶'}
               </button>
               <button
+                onClick={bgm.cycleRepeatMode}
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+                  bgm.repeatMode === 'single'
+                    ? 'bg-amber-warm/20 border border-amber-warm/40 text-amber-warm'
+                    : 'bg-night-600/60 text-text-dim hover:text-amber-soft'
+                }`}
+                aria-label={bgm.repeatMode === 'single' ? '单曲循环' : '轮流播放'}
+                title={bgm.repeatMode === 'single' ? '单曲循环' : '轮流播放'}
+              >
+                {bgm.repeatMode === 'single' ? '🔂' : '🔁'}
+              </button>
+              <button
                 onClick={bgm.toggleMute}
                 className="w-9 h-9 rounded-full bg-night-600/60 text-text-dim flex items-center justify-center hover:text-amber-soft transition-colors"
                 aria-label={bgm.isMuted ? '取消静音' : '静音'}

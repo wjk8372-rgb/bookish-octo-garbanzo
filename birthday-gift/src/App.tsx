@@ -5,6 +5,7 @@ import MusicGate from './components/MusicGate'
 import MusicPicker from './components/MusicPicker'
 import Hero from './components/Hero'
 import Prologue from './components/Prologue'
+import MemoryWalk from './components/MemoryWalk'
 import Timeline from './components/Timeline'
 import ChatReplay from './components/ChatReplay'
 import LetterViewer from './components/LetterViewer'
@@ -70,6 +71,7 @@ export default function App() {
 
             <div ref={contentRef}>
               <Prologue />
+              <MemoryWalk />
               <Timeline />
               <ChatReplay />
               <LetterViewer />

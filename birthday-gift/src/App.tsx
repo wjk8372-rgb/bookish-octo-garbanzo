@@ -67,7 +67,7 @@ export default function App() {
           <VineAnimation />
           <MusicPicker bgm={bgm} />
 
-          <main>
+          <main className="relative z-10">
             <Hero onScrollDown={scrollToContent} />
 
             <div ref={contentRef}>

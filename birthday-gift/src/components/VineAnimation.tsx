@@ -40,20 +40,21 @@ const TENDRILS = [
   { side: 'right' as const, t: 0.5, len: 14 },
 ]
 
-// 顶部交汇处的花朵
+// 底部交汇处的花朵
 const TOP_FLOWERS = [
-  { x: 600, y: 320, size: 12, delay: 0 },
-  { x: 520, y: 350, size: 9, delay: 0.05 },
-  { x: 680, y: 350, size: 9, delay: 0.1 },
-  { x: 600, y: 400, size: 7, delay: 0.15 },
+  { x: 600, y: 710, size: 11, delay: 0 },
+  { x: 540, y: 690, size: 8, delay: 0.05 },
+  { x: 660, y: 690, size: 8, delay: 0.1 },
+  { x: 600, y: 660, size: 7, delay: 0.15 },
 ]
 
 export default function VineAnimation() {
   const leftPathRef = useRef<SVGPathElement>(null)
   const rightPathRef = useRef<SVGPathElement>(null)
   const [progress, setProgress] = useState(0)
-  const [leftLen, setLeftLen] = useState(0)
-  const [rightLen, setRightLen] = useState(0)
+  // 初始化为大数，避免首帧 strokeDasharray=0 导致路径全显（闪一下交汇态）
+  const [leftLen, setLeftLen] = useState(99999)
+  const [rightLen, setRightLen] = useState(99999)
   const [timelineActive, setTimelineActive] = useState(false)
   const [burstCount, setBurstCount] = useState(0)
   const burstCountRef = useRef(0)
@@ -262,17 +263,14 @@ export default function VineAnimation() {
           />
         )}
 
-        {/* 左侧藤蔓：从左下角生长，形成心形左半 */}
+        {/* 左侧藤蔓：从左上角生长，蜿蜒向右下，终点在中心偏左下 */}
         <path
           ref={leftPathRef}
           d="
-            M 80 890
-            C 50 720, 90 560, 160 430
-            C 230 310, 340 240, 430 270
-            C 490 290, 530 330, 560 380
-            C 580 415, 575 450, 570 490
-            C 565 530, 575 565, 590 600
-            C 598 620, 598 625, 600 630
+            M 30 25
+            C 110 90, 70 230, 150 330
+            C 230 430, 190 570, 290 630
+            C 390 690, 480 695, 575 712
           "
           fill="none"
           stroke="url(#vineGrad)"
@@ -286,17 +284,15 @@ export default function VineAnimation() {
           }}
         />
 
-        {/* 右侧藤蔓：从右下角生长，形成心形右半 */}
+        {/* 右侧藤蔓：从右下角生长，蜿蜒向左上，终点在中心偏右下，与左侧微微交汇 */}
         <path
           ref={rightPathRef}
           d="
-            M 1120 890
-            C 1150 720, 1110 560, 1040 430
-            C 970 310, 860 240, 770 270
-            C 710 290, 670 330, 640 380
-            C 620 415, 625 450, 630 490
-            C 635 530, 625 565, 610 600
-            C 602 620, 602 625, 600 630
+            M 1170 875
+            C 1080 810, 1120 660, 1040 560
+            C 960 460, 1000 310, 900 270
+            C 800 230, 820 380, 830 500
+            C 840 620, 740 680, 625 708
           "
           fill="none"
           stroke="url(#vineGradRight)"
@@ -310,18 +306,18 @@ export default function VineAnimation() {
           }}
         />
 
-        {/* 左侧嫩芽 */}
-        <g transform="translate(80, 888)">
-          <line x1="0" y1="0" x2="0" y2={-10 - effectiveProgress * 5} stroke="#8fd060" strokeWidth="2.5" strokeLinecap="round" />
-          <ellipse cx="-6" cy={-8 - effectiveProgress * 2.5} rx="5" ry="3" fill="url(#leafGrad)" transform={`rotate(${-35 - effectiveProgress * 8} -6 ${-8 - effectiveProgress * 2.5})`} style={{ transition: 'all 0.3s ease' }} />
-          <ellipse cx="6" cy={-8 - effectiveProgress * 2.5} rx="5" ry="3" fill="url(#leafGrad)" transform={`rotate(${35 + effectiveProgress * 8} 6 ${-8 - effectiveProgress * 2.5})`} style={{ transition: 'all 0.3s ease' }} />
+        {/* 左侧嫩芽（左上角起点，向下生长） */}
+        <g transform="translate(30, 25)">
+          <line x1="0" y1="0" x2={8 + effectiveProgress * 4} y2={10 + effectiveProgress * 5} stroke="#8fd060" strokeWidth="2.5" strokeLinecap="round" />
+          <ellipse cx={8 + effectiveProgress * 2} cy={4 + effectiveProgress * 1.5} rx="5" ry="3" fill="url(#leafGrad)" transform={`rotate(${45 + effectiveProgress * 8} ${8 + effectiveProgress * 2} ${4 + effectiveProgress * 1.5})`} style={{ transition: 'all 0.3s ease' }} />
+          <ellipse cx={4 + effectiveProgress * 1.5} cy={10 + effectiveProgress * 2.5} rx="5" ry="3" fill="url(#leafGrad)" transform={`rotate(${-20 - effectiveProgress * 8} ${4 + effectiveProgress * 1.5} ${10 + effectiveProgress * 2.5})`} style={{ transition: 'all 0.3s ease' }} />
         </g>
 
-        {/* 右侧嫩芽 */}
-        <g transform="translate(1120, 888)">
-          <line x1="0" y1="0" x2="0" y2={-10 - effectiveProgress * 5} stroke="#8fd060" strokeWidth="2.5" strokeLinecap="round" />
-          <ellipse cx="-6" cy={-8 - effectiveProgress * 2.5} rx="5" ry="3" fill="url(#leafGrad)" transform={`rotate(${-35 - effectiveProgress * 8} -6 ${-8 - effectiveProgress * 2.5})`} style={{ transition: 'all 0.3s ease' }} />
-          <ellipse cx="6" cy={-8 - effectiveProgress * 2.5} rx="5" ry="3" fill="url(#leafGrad)" transform={`rotate(${35 + effectiveProgress * 8} 6 ${-8 - effectiveProgress * 2.5})`} style={{ transition: 'all 0.3s ease' }} />
+        {/* 右侧嫩芽（右下角起点，向上生长） */}
+        <g transform="translate(1170, 875)">
+          <line x1="0" y1="0" x2={-8 - effectiveProgress * 4} y2={-10 - effectiveProgress * 5} stroke="#8fd060" strokeWidth="2.5" strokeLinecap="round" />
+          <ellipse cx={-8 - effectiveProgress * 2} cy={-4 - effectiveProgress * 1.5} rx="5" ry="3" fill="url(#leafGrad)" transform={`rotate(${-135 - effectiveProgress * 8} ${-8 - effectiveProgress * 2} ${-4 - effectiveProgress * 1.5})`} style={{ transition: 'all 0.3s ease' }} />
+          <ellipse cx={-4 - effectiveProgress * 1.5} cy={-10 - effectiveProgress * 2.5} rx="5" ry="3" fill="url(#leafGrad)" transform={`rotate(${160 + effectiveProgress * 8} ${-4 - effectiveProgress * 1.5} ${-10 - effectiveProgress * 2.5})`} style={{ transition: 'all 0.3s ease' }} />
         </g>
 
         {/* 卷须 */}

@@ -32,6 +32,7 @@ export type ChatMessage = {
   text: string
   time?: string
   image?: string // 贴纸/照片，直接显示图片
+  quote?: string // 引用的对方之前的消息
 }
 
 export type Letter = {
@@ -170,8 +171,7 @@ export const moments: Moment[] = [
     chat: [
       { from: 'me', text: '', image: './images/stickers/fire-noodle-meal.png', time: '23:44' },
       { from: 'me', text: '不知道你究竟经历了什么' },
-      { from: 'her', text: '快再次成为了' },
-      { from: 'me', text: '我先替你吃一包火鸡面' },
+      { from: 'me', text: '我先替你吃一包火鸡面', quote: '快再次成为了' },
       { from: 'her', text: '我讨厌你', time: '00:33' },
       { from: 'her', text: '', image: './images/stickers/angry-red.png' },
       { from: 'me', text: '你也吃' },

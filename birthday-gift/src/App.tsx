@@ -5,8 +5,8 @@ import MusicGate from './components/MusicGate'
 import MusicPicker from './components/MusicPicker'
 import Hero from './components/Hero'
 import Prologue from './components/Prologue'
-import MemoryWalk from './components/MemoryWalk'
 import Timeline from './components/Timeline'
+import VineAnimation from './components/VineAnimation'
 import ChatReplay from './components/ChatReplay'
 import LetterViewer from './components/LetterViewer'
 import Stats from './components/Stats'
@@ -64,6 +64,7 @@ export default function App() {
 
       {stage === 'main' && (
         <>
+          <VineAnimation />
           <MusicPicker bgm={bgm} />
 
           <main>
@@ -71,7 +72,6 @@ export default function App() {
 
             <div ref={contentRef}>
               <Prologue />
-              <MemoryWalk />
               <Timeline />
               <ChatReplay />
               <LetterViewer />

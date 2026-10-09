@@ -23,7 +23,11 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
         className={`flip-card h-[480px] md:h-[520px] cursor-pointer glow-hover ${
           flipped ? 'is-flipped' : ''
         }`}
-        onClick={() => setFlipped((f) => !f)}
+        onClick={() => {
+          setFlipped((f) => !f)
+          // 翻转时通知藤蔓生长
+          window.dispatchEvent(new CustomEvent('vine:burst'))
+        }}
       >
         <div className="flip-inner">
           {/* 正面 */}

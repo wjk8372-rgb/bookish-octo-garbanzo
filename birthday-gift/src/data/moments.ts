@@ -170,6 +170,7 @@ export const moments: Moment[] = [
     chat: [
       { from: 'me', text: '', image: './images/stickers/fire-noodle-meal.png', time: '23:44' },
       { from: 'me', text: '不知道你究竟经历了什么' },
+      { from: 'her', text: '快再次成为了' },
       { from: 'me', text: '我先替你吃一包火鸡面' },
       { from: 'her', text: '我讨厌你', time: '00:33' },
       { from: 'her', text: '', image: './images/stickers/angry-red.png' },

@@ -175,7 +175,7 @@ export const moments: Moment[] = [
       { from: 'her', text: '我讨厌你', time: '00:33' },
       { from: 'her', text: '', image: './images/stickers/angry-red.png' },
       { from: 'me', text: '你也吃' },
-      { from: 'me', text: '', image: './images/stickers/shiba-heihei.png' },
+      { from: 'me', text: '', image: './images/stickers/shiba-meme.png' },
     ],
     note: '你让我想起来了，原来火鸡面这么好吃~这个世界不能没有火鸡面！',
     tags: ['火鸡面', '嘿嘿嘿', '美食'],

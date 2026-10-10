@@ -36,7 +36,7 @@ export default function MusicGate({ onEnter }: MusicGateProps) {
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-full max-w-4xl mb-12">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 w-full max-w-4xl mb-12 max-h-[55vh] overflow-y-auto pr-1">
         {tracks.map((track, i) => {
           const active = selected === track.id
           return (

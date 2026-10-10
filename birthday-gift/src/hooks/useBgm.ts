@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Howl } from 'howler'
-import { tracks, type Track } from '../data/tracks'
+import { type Track } from '../data/tracks'
 
 const FADE_MS = 1200
 const DUCK_VOLUME = 0.05
@@ -25,7 +25,7 @@ export type BgmState = {
   unduck: () => void
 }
 
-export function useBgm(): BgmState {
+export function useBgm(tracks: Track[]): BgmState {
   const [currentId, setCurrentId] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolumeState] = useState(0.25)
@@ -33,6 +33,8 @@ export function useBgm(): BgmState {
   const [repeatMode, setRepeatMode] = useState<RepeatMode>('sequence')
 
   const repeatModeRef = useRef<RepeatMode>('sequence')
+  const tracksRef = useRef(tracks)
+  tracksRef.current = tracks
 
   const howlRef = useRef<Howl | null>(null)
   const currentTrackRef = useRef<Track | null>(null)
@@ -78,8 +80,8 @@ export function useBgm(): BgmState {
       })
       howl.on('end', () => {
         if (repeatModeRef.current === 'sequence') {
-          const idx = tracks.findIndex((t) => t.id === track.id)
-          const next = tracks[(idx + 1) % tracks.length]
+          const idx = tracksRef.current.findIndex((t) => t.id === track.id)
+          const next = tracksRef.current[(idx + 1) % tracksRef.current.length]
           if (next) {
             currentTrackRef.current = next
             setCurrentId(next.id)
@@ -96,7 +98,7 @@ export function useBgm(): BgmState {
 
   const selectTrack = useCallback(
     (id: string) => {
-      const track = tracks.find((t) => t.id === id)
+      const track = tracksRef.current.find((t) => t.id === id)
       if (!track) return
       currentTrackRef.current = track
       setCurrentId(id)
@@ -121,7 +123,7 @@ export function useBgm(): BgmState {
   )
 
   const play = useCallback(() => {
-    const track = currentTrackRef.current ?? tracks[0]
+    const track = currentTrackRef.current ?? tracksRef.current[0]
     if (!track) return
     if (!howlRef.current || currentTrackRef.current?.id !== track.id) {
       selectTrack(track.id)

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { moments, type ChatMessage, getHerAvatar, getMeAvatar } from '../data/moments'
+import { type ChatMessage, getHerAvatar, getMeAvatar } from '../data/moments'
+import { useConfig } from '../config/ConfigContext'
 import { formatDate } from '../utils/date'
 
 type ChatItem = {
@@ -12,9 +13,10 @@ type ChatItem = {
 }
 
 export default function ChatReplay() {
+  const { visibleMoments: moments } = useConfig()
   const chatMoments = useMemo(
     () => moments.filter((m) => m.type === 'chat' && m.chat),
-    [],
+    [moments],
   )
 
   const items: ChatItem[] = useMemo(() => {

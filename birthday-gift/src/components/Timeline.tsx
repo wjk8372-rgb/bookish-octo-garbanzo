@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion'
-import { moments } from '../data/moments'
+import { useConfig } from '../config/ConfigContext'
 import MomentCard from './MomentCard'
 
 export default function Timeline() {
+  const { visibleMoments: moments } = useConfig()
   return (
     <section id="timeline" className="relative py-24 md:py-36 px-6">
       <motion.div

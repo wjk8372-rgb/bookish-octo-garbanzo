@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { moments } from '../data/moments'
+import { useConfig } from '../config/ConfigContext'
 import { formatDate } from '../utils/date'
 
 function useTypewriter(text: string, speed = 45, start = false) {
@@ -189,6 +189,7 @@ function EnvelopeCard({
 }
 
 export default function LetterViewer() {
+  const { visibleMoments: moments } = useConfig()
   const letterMoments = moments.filter((m) => m.type === 'letter' && m.letter)
 
   return (

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { tracks } from '../data/tracks'
+import { useConfig } from '../config/ConfigContext'
 
 type MusicGateProps = {
   onEnter: (trackId: string) => void
@@ -9,6 +9,7 @@ type MusicGateProps = {
 const icons = ['♪', '♫', '♩', '♬']
 
 export default function MusicGate({ onEnter }: MusicGateProps) {
+  const { visibleTracks: tracks } = useConfig()
   const [selected, setSelected] = useState<string>(tracks[0]?.id ?? '')
 
   const handleEnter = () => {

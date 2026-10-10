@@ -12,16 +12,19 @@ import LetterViewer from './components/LetterViewer'
 import Stats from './components/Stats'
 import OptionalLetter from './components/OptionalLetter'
 import Footer from './components/Footer'
+import Admin from './pages/Admin'
 import { useBgm } from './hooks/useBgm'
+import { ConfigProvider, useConfig } from './config/ConfigContext'
 
 type Stage = 'loading' | 'gate' | 'main'
 
 // 你的名字/昵称：留空则不显示，可替换为真实昵称
 const HER_NAME = '若怡'
 
-export default function App() {
+function AppContent() {
+  const { visibleTracks } = useConfig()
   const [stage, setStage] = useState<Stage>('loading')
-  const bgm = useBgm()
+  const bgm = useBgm(visibleTracks)
   const contentRef = useRef<HTMLDivElement>(null)
 
   const handleLoadingComplete = useCallback(() => {
@@ -83,5 +86,22 @@ export default function App() {
         </>
       )}
     </>
+  )
+}
+
+export default function App() {
+  // Hash-based routing: #admin shows admin page
+  if (typeof window !== 'undefined' && window.location.hash === '#admin') {
+    return (
+      <ConfigProvider>
+        <Admin />
+      </ConfigProvider>
+    )
+  }
+
+  return (
+    <ConfigProvider>
+      <AppContent />
+    </ConfigProvider>
   )
 }

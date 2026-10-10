@@ -1,17 +1,12 @@
 import { motion } from 'framer-motion'
 import { getHerAvatar, getMeAvatar } from '../data/moments'
-
-type Msg = { from: 'me' | 'her'; text: string; time?: string; image?: string }
-
-// 序章：第一次交流的 4 条聊天记录
-const messages: Msg[] = [
-  { from: 'her', text: '思想很深刻', time: '15:37' },
-  { from: 'her', text: '我对你表示欣赏', time: '15:37' },
-  { from: 'me', text: '谢谢 你能理解到深刻，或许你也是一个求真的人', time: '15:54' },
-  { from: 'me', text: '这也是一种交流了~', time: '15:54' },
-]
+import { useConfig } from '../config/ConfigContext'
 
 export default function Prologue() {
+  const { siteText } = useConfig()
+  const t = siteText.prologue
+  const messages = t.messages
+
   return (
     <section id="prologue" className="relative py-24 md:py-36 px-6">
       <motion.div
@@ -21,10 +16,10 @@ export default function Prologue() {
         className="max-w-2xl mx-auto"
       >
         <h2 className="text-center font-serif text-2xl md:text-4xl text-amber-soft mb-4">
-          序章
+          {t.title}
         </h2>
         <p className="text-center text-text-faint text-sm mb-16">
-          我们的第一次交流 · 2025.11.21
+          {t.subtitle}
         </p>
 
         {/* 聊天窗口 */}
@@ -40,7 +35,7 @@ export default function Prologue() {
               />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm text-slate-100 font-medium truncate">陈若怡</div>
+              <div className="text-sm text-slate-100 font-medium truncate">{t.contactName}</div>
               <div className="text-[11px] text-slate-400 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
                 在线
@@ -55,13 +50,13 @@ export default function Prologue() {
             <div className="flex items-center gap-3 my-2 mb-4">
               <div className="flex-1 h-px bg-black/10" />
               <span className="text-[11px] text-slate-500 whitespace-nowrap">
-                2025/11/21 15:37
+                {messages[0]?.time ?? '15:37'}
               </span>
               <div className="flex-1 h-px bg-black/10" />
             </div>
 
             <div className="space-y-1.5">
-              {messages.map((msg, i) => {
+              {(messages as { from: 'me' | 'her'; text: string; time: string; image?: string }[]).map((msg, i) => {
                 const isMe = msg.from === 'me'
                 const showTime =
                   i === 0 || messages[i - 1].time !== msg.time
@@ -127,7 +122,7 @@ export default function Prologue() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="mt-14 text-center font-kai text-text-dim text-base md:text-xl max-w-2xl mx-auto italic"
         >
-          两条永不相交的平行线，却在命运的纸页上，被同一滴墨，轻轻晕上了一个交点。
+          {t.quote}
         </motion.p>
       </motion.div>
     </section>

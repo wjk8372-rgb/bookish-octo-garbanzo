@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent } from 'react'
-import { useConfig, type TrackConfig, type MomentConfig } from '../config/ConfigContext'
+import { useConfig, type TrackConfig, type MomentConfig, type SiteText } from '../config/ConfigContext'
 
-type Tab = 'songs' | 'timeline' | 'letters'
+type Tab = 'songs' | 'timeline' | 'letters' | 'siteText'
 
 function moveItem<T>(arr: T[], i: number, dir: -1 | 1): T[] {
   const j = i + dir
@@ -22,7 +22,7 @@ const inputCls =
 const labelCls = 'text-xs text-text-faint mb-1 block'
 
 export default function Admin() {
-  const { tracks, moments, setTracks, setMoments, reset, exportJSON, importJSON } =
+  const { tracks, moments, siteText, setTracks, setMoments, setSiteText, reset, exportJSON, importJSON } =
     useConfig()
   const [tab, setTab] = useState<Tab>('songs')
 
@@ -100,6 +100,12 @@ export default function Admin() {
             className={`${tab === 'letters' ? btnAmber : btnDark}`}
           >
             信件 ({letterMoments.length})
+          </button>
+          <button
+            onClick={() => setTab('siteText')}
+            className={`${tab === 'siteText' ? btnAmber : btnDark}`}
+          >
+            网站文字
           </button>
         </div>
 
@@ -194,6 +200,14 @@ export default function Admin() {
               />
             ))}
           </div>
+        )}
+
+        {/* Site Text Tab */}
+        {tab === 'siteText' && (
+          <SiteTextEditor
+            siteText={siteText}
+            onChange={setSiteText}
+          />
         )}
       </div>
     </div>
@@ -604,6 +618,261 @@ function LetterItem({
           }
         />
       </div>
+    </div>
+  )
+}
+
+// ── Site Text Editor ──
+function SiteTextEditor({
+  siteText,
+  onChange,
+}: {
+  siteText: SiteText
+  onChange: (s: SiteText) => void
+}) {
+  const [section, setSection] = useState<'hero' | 'prologue' | 'stats' | 'optionalLetter' | 'footer'>('hero')
+
+  const update = (section: keyof SiteText, patch: Partial<typeof siteText[typeof section]>) =>
+    onChange({ ...siteText, [section]: { ...siteText[section], ...patch } })
+
+  const sectionBtns: { key: typeof section; label: string }[] = [
+    { key: 'hero', label: '首页' },
+    { key: 'prologue', label: '序章' },
+    { key: 'stats', label: '数字' },
+    { key: 'optionalLetter', label: '可选信' },
+    { key: 'footer', label: '结尾' },
+  ]
+
+  return (
+    <div>
+      {/* Section selector */}
+      <div className="flex gap-2 mb-4 flex-wrap">
+        {sectionBtns.map((s) => (
+          <button
+            key={s.key}
+            onClick={() => setSection(s.key)}
+            className={`${section === s.key ? btnAmber : btnDark}`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="mb-4 p-3 rounded-lg bg-night-700/50 border border-amber-warm/15 text-xs text-text-faint">
+        提示：<code className="text-amber-soft">{'{days}'}</code> = 认识天数，<code className="text-amber-soft">{'{toAnniv}'}</code> = 距一周年天数，<code className="text-amber-soft">{'{startDate}'}</code> = 起始日期，<code className="text-amber-soft">{'{annivDate}'}</code> = 周年日期
+      </div>
+
+      {/* Hero section */}
+      {section === 'hero' && (
+        <div className="space-y-3 p-4 rounded-xl bg-night-700/50 border border-amber-warm/15">
+          <div>
+            <label className={labelCls}>日期范围（顶部小字）</label>
+            <input className={inputCls} value={siteText.hero.dateRange}
+              onChange={(e) => update('hero', { dateRange: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>主标题（大字）</label>
+              <input className={inputCls} value={siteText.hero.mainTitle}
+                onChange={(e) => update('hero', { mainTitle: e.target.value })} />
+            </div>
+            <div>
+              <label className={labelCls}>副标题（标题下方）</label>
+              <input className={inputCls} value={siteText.hero.subTitle}
+                onChange={(e) => update('hero', { subTitle: e.target.value })} />
+            </div>
+          </div>
+          <div>
+            <label className={labelCls}>第一行文字</label>
+            <input className={inputCls} value={siteText.hero.line1}
+              onChange={(e) => update('hero', { line1: e.target.value })} />
+          </div>
+          <div>
+            <label className={labelCls}>第二行文字（可用变量）</label>
+            <input className={inputCls} value={siteText.hero.line2}
+              onChange={(e) => update('hero', { line2: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>按钮文字</label>
+              <input className={inputCls} value={siteText.hero.buttonText}
+                onChange={(e) => update('hero', { buttonText: e.target.value })} />
+            </div>
+            <div>
+              <label className={labelCls}>滚动提示</label>
+              <input className={inputCls} value={siteText.hero.scrollHint}
+                onChange={(e) => update('hero', { scrollHint: e.target.value })} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Prologue section */}
+      {section === 'prologue' && (
+        <div className="space-y-3 p-4 rounded-xl bg-night-700/50 border border-amber-warm/15">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>标题</label>
+              <input className={inputCls} value={siteText.prologue.title}
+                onChange={(e) => update('prologue', { title: e.target.value })} />
+            </div>
+            <div>
+              <label className={labelCls}>副标题</label>
+              <input className={inputCls} value={siteText.prologue.subtitle}
+                onChange={(e) => update('prologue', { subtitle: e.target.value })} />
+            </div>
+          </div>
+          <div>
+            <label className={labelCls}>联系人名称（聊天顶栏）</label>
+            <input className={inputCls} value={siteText.prologue.contactName}
+              onChange={(e) => update('prologue', { contactName: e.target.value })} />
+          </div>
+          <div>
+            <label className={labelCls}>底部引言</label>
+            <textarea className={`${inputCls} min-h-[60px] resize-y`} value={siteText.prologue.quote}
+              onChange={(e) => update('prologue', { quote: e.target.value })} />
+          </div>
+          <div className="pt-3 border-t border-night-500/50">
+            <p className="text-xs text-text-faint mb-2">序章聊天消息：</p>
+            {siteText.prologue.messages.map((msg, j) => (
+              <div key={j} className="flex items-start gap-2 p-2 rounded bg-night-800/50 mb-1">
+                <select className="bg-night-800 border border-night-500 rounded px-2 py-1 text-xs text-text shrink-0"
+                  value={msg.from}
+                  onChange={(e) => update('prologue', {
+                    messages: siteText.prologue.messages.map((m2, k) =>
+                      k === j ? { ...m2, from: e.target.value as 'me' | 'her' } : m2),
+                  })}>
+                  <option value="her">她</option>
+                  <option value="me">我</option>
+                </select>
+                <input className={`${inputCls} text-xs flex-1`} value={msg.text}
+                  onChange={(e) => update('prologue', {
+                    messages: siteText.prologue.messages.map((m2, k) =>
+                      k === j ? { ...m2, text: e.target.value } : m2),
+                  })} />
+                <input className={`${inputCls} text-xs w-20`} value={msg.time}
+                  onChange={(e) => update('prologue', {
+                    messages: siteText.prologue.messages.map((m2, k) =>
+                      k === j ? { ...m2, time: e.target.value } : m2),
+                  })} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Stats section */}
+      {section === 'stats' && (
+        <div className="space-y-3 p-4 rounded-xl bg-night-700/50 border border-amber-warm/15">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>标题</label>
+              <input className={inputCls} value={siteText.stats.title}
+                onChange={(e) => update('stats', { title: e.target.value })} />
+            </div>
+            <div>
+              <label className={labelCls}>副标题</label>
+              <input className={inputCls} value={siteText.stats.subtitle}
+                onChange={(e) => update('stats', { subtitle: e.target.value })} />
+            </div>
+          </div>
+          <div className="pt-3 border-t border-night-500/50 space-y-2">
+            <p className="text-xs text-text-faint mb-2">数字卡片：</p>
+            {siteText.stats.items.map((item, j) => (
+              <div key={j} className="p-2 rounded bg-night-800/50 space-y-1">
+                <div className="flex gap-2">
+                  <input className={`${inputCls} text-xs`} placeholder="标签" value={item.label}
+                    onChange={(e) => update('stats', {
+                      items: siteText.stats.items.map((it, k) =>
+                        k === j ? { ...it, label: e.target.value } : it),
+                    })} />
+                  <input className={`${inputCls} text-xs`} placeholder="值（可用变量）" value={item.value}
+                    onChange={(e) => update('stats', {
+                      items: siteText.stats.items.map((it, k) =>
+                        k === j ? { ...it, value: e.target.value } : it),
+                    })} />
+                </div>
+                <input className={`${inputCls} text-xs`} placeholder="副文字（可用变量）" value={item.sub}
+                  onChange={(e) => update('stats', {
+                    items: siteText.stats.items.map((it, k) =>
+                      k === j ? { ...it, sub: e.target.value } : it),
+                  })} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Optional Letter section */}
+      {section === 'optionalLetter' && (
+        <div className="space-y-3 p-4 rounded-xl bg-night-700/50 border border-amber-warm/15">
+          <div>
+            <label className={labelCls}>引导文字（按钮上方）</label>
+            <input className={inputCls} value={siteText.optionalLetter.intro}
+              onChange={(e) => update('optionalLetter', { intro: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>按钮文字</label>
+              <input className={inputCls} value={siteText.optionalLetter.buttonText}
+                onChange={(e) => update('optionalLetter', { buttonText: e.target.value })} />
+            </div>
+            <div>
+              <label className={labelCls}>按钮副文字</label>
+              <input className={inputCls} value={siteText.optionalLetter.buttonSubtext}
+                onChange={(e) => update('optionalLetter', { buttonSubtext: e.target.value })} />
+            </div>
+          </div>
+          <div>
+            <label className={labelCls}>信件正文</label>
+            <textarea className={`${inputCls} min-h-[200px] resize-y font-mono`} value={siteText.optionalLetter.letterContent}
+              onChange={(e) => update('optionalLetter', { letterContent: e.target.value })} />
+          </div>
+          <div>
+            <label className={labelCls}>落款</label>
+            <input className={inputCls} value={siteText.optionalLetter.signature}
+              onChange={(e) => update('optionalLetter', { signature: e.target.value })} />
+          </div>
+        </div>
+      )}
+
+      {/* Footer section */}
+      {section === 'footer' && (
+        <div className="space-y-3 p-4 rounded-xl bg-night-700/50 border border-amber-warm/15">
+          <div>
+            <label className={labelCls}>结尾大标题</label>
+            <input className={inputCls} value={siteText.footer.title}
+              onChange={(e) => update('footer', { title: e.target.value })} />
+          </div>
+          <div>
+            <label className={labelCls}>第一行祝福语</label>
+            <textarea className={`${inputCls} min-h-[40px] resize-y`} value={siteText.footer.line1}
+              onChange={(e) => update('footer', { line1: e.target.value })} />
+          </div>
+          <div>
+            <label className={labelCls}>第二行祝福语</label>
+            <textarea className={`${inputCls} min-h-[40px] resize-y`} value={siteText.footer.line2}
+              onChange={(e) => update('footer', { line2: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>"回到开头"按钮</label>
+              <input className={inputCls} value={siteText.footer.restartButton}
+                onChange={(e) => update('footer', { restartButton: e.target.value })} />
+            </div>
+            <div>
+              <label className={labelCls}>"再听一遍"按钮</label>
+              <input className={inputCls} value={siteText.footer.replayButton}
+                onChange={(e) => update('footer', { replayButton: e.target.value })} />
+            </div>
+          </div>
+          <div>
+            <label className={labelCls}>版权文字（最底部）</label>
+            <input className={inputCls} value={siteText.footer.copyright}
+              onChange={(e) => update('footer', { copyright: e.target.value })} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

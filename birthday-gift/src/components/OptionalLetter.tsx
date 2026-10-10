@@ -1,30 +1,14 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-
-const letterContent = `10.13 生日快乐。
-
-从 2025.11.21 你私信我那天算起，到今天是第 327 天。
-距离我们认识一年，还差 39 天。
-
-我本来想等 11.21 再写这些，但生日更重要。
-
-认识你之后，一年变成了很多具体的瞬间。
-那些你说过的话、写过的字，都被我好好收着。
-
-我有时候会想，如果我们不只是朋友，会怎样。
-但我更怕让你为难。
-
-所以今天，你只需要开心。
-生日快乐。
-
-11.21 那天，如果我们还记得，就再庆祝一次。
-不用回复，不用有压力。`
+import { useConfig } from '../config/ConfigContext'
 
 type OptionalLetterProps = {
   onOpen?: () => void
 }
 
 export default function OptionalLetter({ onOpen }: OptionalLetterProps) {
+  const { siteText } = useConfig()
+  const t = siteText.optionalLetter
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => {
@@ -46,15 +30,15 @@ export default function OptionalLetter({ onOpen }: OptionalLetterProps) {
               transition={{ duration: 0.6 }}
             >
               <p className="text-text-faint text-sm mb-6">
-                最后，有一封信
+                {t.intro}
               </p>
               <button
                 onClick={handleOpen}
                 className="px-8 py-4 rounded-full border border-amber-warm/40 text-amber-soft hover:bg-amber-warm/10 hover:border-amber-warm transition-all font-kai text-base md:text-lg leading-relaxed max-w-md mx-auto"
               >
-                如果你愿意，可以点开。
+                {t.buttonText}
                 <br />
-                <span className="text-sm text-text-faint">不点也没关系。</span>
+                <span className="text-sm text-text-faint">{t.buttonSubtext}</span>
               </button>
             </motion.div>
           ) : (
@@ -66,10 +50,10 @@ export default function OptionalLetter({ onOpen }: OptionalLetterProps) {
               className="letter-paper p-8 md:p-12 text-left"
             >
               <p className="whitespace-pre-line font-kai text-base md:text-lg leading-9 text-ink/90">
-                {letterContent}
+                {t.letterContent}
               </p>
               <p className="mt-8 text-right text-ink/50 text-sm">
-                —— 写于 2026.10.13
+                {t.signature}
               </p>
             </motion.div>
           )}

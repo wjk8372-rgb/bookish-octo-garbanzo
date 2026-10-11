@@ -116,6 +116,7 @@ const defaultSiteText: SiteText = {
 }
 
 type ConfigData = {
+  version: number
   tracks: TrackConfig[]
   moments: MomentConfig[]
   siteText: SiteText
@@ -136,6 +137,9 @@ type ConfigContextValue = {
 }
 
 const STORAGE_KEY = 'bg-config-v1'
+// 数据版本：当默认聊天/信件内容有修正时，递增此版本号，
+// 已缓存的旧版内容会被新版默认内容覆盖（但保留用户的显隐/标题/备注/标签编辑）。
+const DATA_VERSION = 2
 
 const ConfigContext = createContext<ConfigContextValue | null>(null)
 
@@ -156,23 +160,39 @@ function mergeSiteText(stored: Partial<SiteText> | undefined): SiteText {
   }
 }
 
-// Merge stored moments with defaults: keep user's order/hidden edits,
-// insert any new default moments (by id) at their default position.
-function mergeMoments(stored: MomentConfig[] | undefined): MomentConfig[] {
+// Merge stored moments with defaults:
+// - 新增的默认条目按默认顺序插入
+// - 当数据版本升级时，用默认的聊天/信件内容覆盖缓存，但保留用户对
+//   显隐(hidden)、标题、摘要、旁白、标签的编辑
+function mergeMoments(
+  stored: MomentConfig[] | undefined,
+  storedVersion: number,
+): MomentConfig[] {
   if (!stored || stored.length === 0) {
     return defaultMoments.map((m) => ({ ...m }))
   }
+  const refreshContent = storedVersion < DATA_VERSION
   const storedById = new Map(stored.map((m) => [m.id, m]))
   const result: MomentConfig[] = []
   for (const def of defaultMoments) {
     const existing = storedById.get(def.id)
-    if (existing) {
-      result.push(existing)
-    } else {
+    if (!existing) {
       result.push({ ...def })
+    } else if (refreshContent) {
+      // 用默认内容（chat/letter/date/type）覆盖，保留用户编辑的偏好字段
+      result.push({
+        ...def,
+        hidden: existing.hidden,
+        title: existing.title,
+        summary: existing.summary,
+        note: existing.note,
+        tags: existing.tags,
+      })
+    } else {
+      result.push(existing)
     }
   }
-  // Append any stored moments that aren't in defaults (user-added, if any)
+  // 用户自行添加的条目（不在默认中）保留
   const defaultIds = new Set(defaultMoments.map((m) => m.id))
   for (const s of stored) {
     if (!defaultIds.has(s.id)) result.push(s)
@@ -186,9 +206,11 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       const raw = localStorage.getItem(STORAGE_KEY)
       if (raw) {
         const parsed = JSON.parse(raw)
+        const storedVersion: number = parsed.version ?? 0
         return {
+          version: DATA_VERSION,
           tracks: parsed.tracks ?? defaultTracks.map((t) => ({ ...t })),
-          moments: mergeMoments(parsed.moments),
+          moments: mergeMoments(parsed.moments, storedVersion),
           siteText: mergeSiteText(parsed.siteText),
         }
       }
@@ -196,6 +218,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       /* noop */
     }
     return {
+      version: DATA_VERSION,
       tracks: defaultTracks.map((t) => ({ ...t })),
       moments: defaultMoments.map((m) => ({ ...m })),
       siteText: clone(defaultSiteText),
@@ -221,6 +244,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
     setSiteText: (siteText) => setData((d) => ({ ...d, siteText })),
     reset: () =>
       setData({
+        version: DATA_VERSION,
         tracks: defaultTracks.map((t) => ({ ...t })),
         moments: defaultMoments.map((m) => ({ ...m })),
         siteText: clone(defaultSiteText),
@@ -240,9 +264,11 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       try {
         const parsed = JSON.parse(json)
         if (parsed.tracks && parsed.moments) {
+          const importedVersion: number = parsed.version ?? 0
           setData({
+            version: DATA_VERSION,
             tracks: parsed.tracks,
-            moments: mergeMoments(parsed.moments),
+            moments: mergeMoments(parsed.moments, importedVersion),
             siteText: mergeSiteText(parsed.siteText),
           })
           return true

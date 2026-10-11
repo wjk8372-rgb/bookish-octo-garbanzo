@@ -4,6 +4,7 @@ import Loading from './components/Loading'
 import MusicGate from './components/MusicGate'
 import MusicPicker from './components/MusicPicker'
 import Hero from './components/Hero'
+import PinLock from './components/PinLock'
 import Prologue from './components/Prologue'
 import Timeline from './components/Timeline'
 import VineAnimation from './components/VineAnimation'
@@ -21,11 +22,29 @@ type Stage = 'loading' | 'gate' | 'main'
 // 你的名字/昵称：留空则不显示，可替换为真实昵称
 const HER_NAME = '若怡'
 
+const PIN_UNLOCK_KEY = 'bg-pin-unlocked'
+
 function AppContent() {
   const { visibleTracks } = useConfig()
   const [stage, setStage] = useState<Stage>('loading')
+  const [unlocked, setUnlocked] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(PIN_UNLOCK_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
   const bgm = useBgm(visibleTracks)
   const contentRef = useRef<HTMLDivElement>(null)
+
+  const handleUnlock = useCallback(() => {
+    setUnlocked(true)
+    try {
+      localStorage.setItem(PIN_UNLOCK_KEY, '1')
+    } catch {
+      /* noop */
+    }
+  }, [])
 
   const handleLoadingComplete = useCallback(() => {
     setStage('gate')
@@ -73,15 +92,21 @@ function AppContent() {
           <main className="relative z-10">
             <Hero onScrollDown={scrollToContent} />
 
-            <div ref={contentRef}>
-              <Prologue />
-              <Timeline />
-              <ChatReplay />
-              <LetterViewer />
-              <Stats />
-              <OptionalLetter onOpen={bgm.duck} />
-              <Footer onRestart={handleRestart} onReplayMusic={handleReplayMusic} />
-            </div>
+            {!unlocked ? (
+              <div ref={contentRef}>
+                <PinLock onUnlock={handleUnlock} />
+              </div>
+            ) : (
+              <div ref={contentRef}>
+                <Prologue />
+                <Timeline />
+                <ChatReplay />
+                <LetterViewer />
+                <Stats />
+                <OptionalLetter onOpen={bgm.duck} />
+                <Footer onRestart={handleRestart} onReplayMusic={handleReplayMusic} />
+              </div>
+            )}
           </main>
         </>
       )}

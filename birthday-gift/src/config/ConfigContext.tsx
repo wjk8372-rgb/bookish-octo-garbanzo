@@ -139,7 +139,7 @@ type ConfigContextValue = {
 const STORAGE_KEY = 'bg-config-v1'
 // 数据版本：当默认聊天/信件内容有修正时，递增此版本号，
 // 已缓存的旧版内容会被新版默认内容覆盖（但保留用户的显隐/标题/备注/标签编辑）。
-const DATA_VERSION = 4
+const DATA_VERSION = 5
 
 const ConfigContext = createContext<ConfigContextValue | null>(null)
 

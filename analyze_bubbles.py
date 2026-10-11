@@ -114,10 +114,9 @@ def analyze(path):
         all_bubbles.append([c[0], c[1], c[2], c[3], 'white'])
     all_bubbles.sort(key=lambda x: x[0])
 
-    # 过滤状态栏和底部
-    top_cut = int(h * 0.05)
+    # 只过滤底部输入栏，不过滤顶部
     bot_cut = int(h * 0.92)
-    all_bubbles = [b for b in all_bubbles if b[0] > top_cut and b[1] < bot_cut]
+    all_bubbles = [b for b in all_bubbles if b[1] < bot_cut]
 
     # 合并重叠的（同色且垂直重叠 -> 合并；异色重叠 -> 取更大的）
     merged = []

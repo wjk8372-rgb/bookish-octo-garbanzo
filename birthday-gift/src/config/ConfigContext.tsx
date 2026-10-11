@@ -156,6 +156,30 @@ function mergeSiteText(stored: Partial<SiteText> | undefined): SiteText {
   }
 }
 
+// Merge stored moments with defaults: keep user's order/hidden edits,
+// insert any new default moments (by id) at their default position.
+function mergeMoments(stored: MomentConfig[] | undefined): MomentConfig[] {
+  if (!stored || stored.length === 0) {
+    return defaultMoments.map((m) => ({ ...m }))
+  }
+  const storedById = new Map(stored.map((m) => [m.id, m]))
+  const result: MomentConfig[] = []
+  for (const def of defaultMoments) {
+    const existing = storedById.get(def.id)
+    if (existing) {
+      result.push(existing)
+    } else {
+      result.push({ ...def })
+    }
+  }
+  // Append any stored moments that aren't in defaults (user-added, if any)
+  const defaultIds = new Set(defaultMoments.map((m) => m.id))
+  for (const s of stored) {
+    if (!defaultIds.has(s.id)) result.push(s)
+  }
+  return result
+}
+
 export function ConfigProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<ConfigData>(() => {
     try {
@@ -164,7 +188,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
         const parsed = JSON.parse(raw)
         return {
           tracks: parsed.tracks ?? defaultTracks.map((t) => ({ ...t })),
-          moments: parsed.moments ?? defaultMoments.map((m) => ({ ...m })),
+          moments: mergeMoments(parsed.moments),
           siteText: mergeSiteText(parsed.siteText),
         }
       }
@@ -218,7 +242,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
         if (parsed.tracks && parsed.moments) {
           setData({
             tracks: parsed.tracks,
-            moments: parsed.moments,
+            moments: mergeMoments(parsed.moments),
             siteText: mergeSiteText(parsed.siteText),
           })
           return true

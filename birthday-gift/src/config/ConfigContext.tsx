@@ -151,7 +151,7 @@ type ConfigContextValue = {
 
 const STORAGE_KEY = 'bg-config-v1'
 const STORAGE_TS_KEY = 'bg-config-ts'
-const DATA_VERSION = 10
+const DATA_VERSION = 11
 
 const ConfigContext = createContext<ConfigContextValue | null>(null)
 
@@ -206,8 +206,14 @@ function mergeMoments(
         }
       }
       // 聊天记录同样确保不为空
-      if (def.type === 'chat' && def.chat && (!merged.chat || merged.chat.length === 0)) {
-        merged.chat = def.chat
+      if (def.type === 'chat' && def.chat) {
+        if (!merged.chat || merged.chat.length === 0) {
+          merged.chat = def.chat
+        } else {
+          // 检查是否有实际文字内容
+          const hasContent = merged.chat.some((m) => m.text && m.text.trim())
+          if (!hasContent) merged.chat = def.chat
+        }
       }
       result.push(merged)
     }

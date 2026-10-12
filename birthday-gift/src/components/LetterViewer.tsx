@@ -272,7 +272,7 @@ export default function LetterViewer() {
           信件收纳盒
         </h2>
         <p className="text-center text-text-faint text-xs mb-12">
-          写过的，和没寄出的 · 悬停查看 · 点击展开
+          写过的，和寄出的 · 悬停查看 · 点击展开
         </p>
 
         {/* 信封排列 — 一排最多5封 */}

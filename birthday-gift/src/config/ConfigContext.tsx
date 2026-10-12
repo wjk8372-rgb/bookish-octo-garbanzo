@@ -66,7 +66,7 @@ const defaultSiteText: SiteText = {
   prologue: {
     title: '序章',
     subtitle: '我们的第一次交流 · 2025.11.21',
-    quote: '两条永不相交的平行线，却在命运的纸页上，被同一滴墨，轻轻晕上了一个交点。',
+    quote: '两条永不相交的平行线，却在命运的纸页上，被同一滴墨，轻轻晕上了一个点。',
     contactName: '陈若怡',
     messages: [
       { from: 'her', text: '思想很深刻', time: '15:37' },
@@ -77,7 +77,7 @@ const defaultSiteText: SiteText = {
   },
   stats: {
     title: '关于我们的一些数字',
-    subtitle: '时间被拆成了这些具体的瞬间',
+    subtitle: '时间慢慢变成了无数细小的瞬间',
     items: [
       { label: '认识天数', value: '第 {days} 天', sub: '从 {startDate} 算起' },
       { label: '距离一周年', value: '{toAnniv} 天', sub: '到 {annivDate}' },
@@ -86,15 +86,15 @@ const defaultSiteText: SiteText = {
   },
   optionalLetter: {
     intro: '最后，有一封信',
-    buttonText: '',
+    buttonText: '打开',
     buttonSubtext: '',
-    letterContent: '',
+    letterContent: '若若，\n\n祝你21岁生日快乐！\n\n从我们因为一条评论偶然认识开始，已经过去快一年了。时间过得真快呀，与此同时又觉得和你认识了很久。好像过去自己独自面对的事情，因为你的看见，于是多了你的身影。\n\n现在的你以这样的方式参与了我的过往，很多时候我想说，被看见的感觉真好，认识你真好。\n\n好像平时想跟你说的话都告诉你咯，正想正儿八经跟你说点什么的时候，反而不知道说什么。\n\n总之，希望你快乐，但不止今天。',
     signature: '—— 写于 2026.10.13',
   },
   footer: {
-    title: '10.13 快乐。',
-    line1: '认识你，是我这一年很幸运的事。',
-    line2: '11.21 那天，如果我们还记得，就再庆祝一次。',
+    title: '10.13 生日快乐~',
+    line1: '认识你，是一件很幸运的事。',
+    line2: '',
     restartButton: '回到开头',
     replayButton: '再听一遍',
     copyright: '从一条抖音私信开始 · 写给 10.13 的你',
@@ -134,7 +134,7 @@ type ConfigContextValue = {
 
 const STORAGE_KEY = 'bg-config-v1'
 const STORAGE_TS_KEY = 'bg-config-ts'
-const DATA_VERSION = 12
+const DATA_VERSION = 13
 
 const ConfigContext = createContext<ConfigContextValue | null>(null)
 

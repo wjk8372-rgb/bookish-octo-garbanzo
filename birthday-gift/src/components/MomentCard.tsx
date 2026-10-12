@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import type { Moment } from '../data/moments'
 import { getHerAvatar, getMeAvatar } from '../data/moments'
@@ -10,8 +9,6 @@ type MomentCardProps = {
 }
 
 export default function MomentCard({ moment, index }: MomentCardProps) {
-  const [flipped, setFlipped] = useState(false)
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -19,17 +16,9 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
       transition={{ duration: 0.7, delay: Math.min(index * 0.05, 0.3) }}
       className="w-full"
     >
-      <div
-        className={`flip-card h-[480px] md:h-[520px] cursor-pointer glow-hover ${
-          flipped ? 'is-flipped' : ''
-        }`}
-        onClick={() => {
-          setFlipped((f) => !f)
-        }}
-      >
-        <div className="flip-inner">
+      <div className="glass p-5 md:p-6 flex flex-col glow-hover">
           {/* 正面 */}
-          <div className="flip-face glass p-5 md:p-6 flex flex-col overflow-hidden">
+          <div className="flex flex-col">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs text-amber-warm/80 font-serif tracking-wider">
                 {formatDate(moment.date)}
@@ -127,24 +116,18 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
               ) : null}
             </div>
 
-            <p className="mt-3 text-[11px] text-text-faint text-center">
-              点击翻转 · 你可能不知道的是…
-            </p>
-          </div>
 
-          {/* 背面 */}
-          <div className="flip-face flip-back glass p-5 md:p-6 flex flex-col justify-center border-amber-warm/30">
-            <p className="text-xs text-amber-warm/70 tracking-widest mb-4">
-              你可能不知道的是…
-            </p>
-            <p className="font-kai text-text text-base md:text-lg leading-relaxed mb-5">
-              {moment.note}
-            </p>
-            <p className="mt-auto pt-4 text-[11px] text-text-faint text-center">
-              点击翻回正面
-            </p>
+            {moment.note && (
+              <div className="mt-4 pt-4 border-t border-amber-warm/20">
+                <p className="text-[11px] text-amber-warm/70 tracking-widest mb-2">
+                  你可能不知道的是…
+                </p>
+                <p className="font-kai text-text text-base md:text-lg leading-relaxed">
+                  {moment.note}
+                </p>
+              </div>
+            )}
           </div>
-        </div>
       </div>
     </motion.div>
   )

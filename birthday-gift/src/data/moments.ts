@@ -247,7 +247,7 @@ export const moments: Moment[] = [
     id: 14,
     date: '2026-06-23',
     type: 'chat',
-    title: '火鸡面',
+    title: '这个世界不能没有火鸡面！',
     summary: '你让我想起来了，原来火鸡面这么好吃',
     chat: [
       { from: 'me', text: '', image: './images/stickers/fire-noodle-meal.png', time: '23:44' },

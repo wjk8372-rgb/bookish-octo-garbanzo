@@ -134,7 +134,7 @@ type ConfigContextValue = {
 
 const STORAGE_KEY = 'bg-config-v1'
 const STORAGE_TS_KEY = 'bg-config-ts'
-const DATA_VERSION = 13
+const DATA_VERSION = 14
 
 const ConfigContext = createContext<ConfigContextValue | null>(null)
 
@@ -142,8 +142,13 @@ function clone<T>(o: T): T {
   return JSON.parse(JSON.stringify(o))
 }
 
-function mergeSiteText(stored: Partial<SiteText> | undefined): SiteText {
+function mergeSiteText(
+  stored: Partial<SiteText> | undefined,
+  storedVersion: number,
+): SiteText {
   if (!stored) return clone(defaultSiteText)
+  // 版本升级时，siteText 全部使用默认值（开发者更新的文案优先于旧缓存）
+  if (storedVersion < DATA_VERSION) return clone(defaultSiteText)
   return {
     hero: { ...defaultSiteText.hero, ...stored.hero },
     prologue: { ...defaultSiteText.prologue, ...stored.prologue },
@@ -168,13 +173,10 @@ function mergeMoments(
     if (!existing) {
       result.push({ ...def })
     } else if (refreshContent) {
+      // 版本升级时，用默认内容覆盖（包括 title/summary/note），仅保留用户的显隐设置
       result.push({
         ...def,
         hidden: existing.hidden,
-        title: existing.title,
-        summary: existing.summary,
-        note: existing.note,
-        tags: existing.tags,
       })
     } else {
       // 保留用户编辑，但如果信件内容为空则用默认内容补回
@@ -228,7 +230,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
           version: DATA_VERSION,
           tracks: parsed.tracks ?? defaultTracks.map((t) => ({ ...t })),
           moments: mergeMoments(parsed.moments, storedVersion),
-          siteText: mergeSiteText(parsed.siteText),
+          siteText: mergeSiteText(parsed.siteText, storedVersion),
         }
       }
     } catch {
@@ -307,7 +309,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
             version: DATA_VERSION,
             tracks: cloudData.tracks ?? defaultTracks.map((t) => ({ ...t })),
             moments: mergeMoments(cloudData.moments, storedVersion),
-            siteText: mergeSiteText(cloudData.siteText),
+            siteText: mergeSiteText(cloudData.siteText, storedVersion),
           }
           setData(cloudConfig)
           localTsRef.current = cloudTs
@@ -402,7 +404,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
             version: DATA_VERSION,
             tracks: parsed.tracks,
             moments: mergeMoments(parsed.moments, importedVersion),
-            siteText: mergeSiteText(parsed.siteText),
+            siteText: mergeSiteText(parsed.siteText, importedVersion),
           })
           return true
         }

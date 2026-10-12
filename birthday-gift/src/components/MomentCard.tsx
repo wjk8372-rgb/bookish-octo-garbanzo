@@ -16,9 +16,9 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
       transition={{ duration: 0.7, delay: Math.min(index * 0.05, 0.3) }}
       className="w-full"
     >
-      <div className="glass p-5 md:p-6 flex flex-col glow-hover">
+      <div className="glass p-5 md:p-6 flex flex-col glow-hover h-[480px] md:h-[520px]">
           {/* 正面 */}
-          <div className="flex flex-col">
+          <div className="flex flex-col h-full">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs text-amber-warm/80 font-serif tracking-wider">
                 {formatDate(moment.date)}

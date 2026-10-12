@@ -16,8 +16,12 @@ const firebaseConfig = {
 let app: FirebaseApp | null = null
 let db: Database | null = null
 
+// 暂时禁用 Firebase 云同步（配置不完整导致黑屏）
+// 如需启用，请确保 appId 正确，并将下面的 false 改为 true
+const ENABLE_FIREBASE = false
+
 try {
-  if (firebaseConfig.apiKey !== 'YOUR_API_KEY') {
+  if (ENABLE_FIREBASE && firebaseConfig.apiKey !== 'YOUR_API_KEY') {
     app = initializeApp(firebaseConfig)
     db = getDatabase(app)
   }

@@ -7,7 +7,6 @@ import Hero from './components/Hero'
 import PinLock from './components/PinLock'
 import Prologue from './components/Prologue'
 import Timeline from './components/Timeline'
-import VineAnimation from './components/VineAnimation'
 import ChatReplay from './components/ChatReplay'
 import LetterViewer from './components/LetterViewer'
 import Stats from './components/Stats'
@@ -86,7 +85,6 @@ function AppContent() {
 
       {stage === 'main' && (
         <>
-          <VineAnimation />
           <MusicPicker bgm={bgm} />
 
           <main className="relative z-10">

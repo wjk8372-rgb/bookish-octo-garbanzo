@@ -255,19 +255,6 @@ function LetterDetail({
         <div className="mt-5 pt-3.5 border-t border-amber-900/10 text-xs text-amber-700/60 italic">
           📝 {moment.note}
         </div>
-
-        {/* 标签 */}
-        <div className="mt-3 flex gap-1.5 flex-wrap">
-          {moment.tags.map((tag) => (
-            <span
-              key={tag}
-              className="text-[10px] px-2 py-0.5 rounded-full"
-              style={{ background: 'rgba(196,168,116,0.15)', color: '#8a7a4a' }}
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
       </motion.div>
     </motion.div>
   )

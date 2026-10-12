@@ -25,8 +25,6 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
         }`}
         onClick={() => {
           setFlipped((f) => !f)
-          // 翻转时通知藤蔓生长
-          window.dispatchEvent(new CustomEvent('vine:burst'))
         }}
       >
         <div className="flip-inner">
@@ -142,16 +140,6 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
             <p className="font-kai text-text text-base md:text-lg leading-relaxed mb-5">
               {moment.note}
             </p>
-            <div className="flex flex-wrap gap-2">
-              {moment.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-[11px] px-2 py-0.5 rounded-full bg-amber-warm/10 text-amber-soft/70 border border-amber-warm/20"
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
             <p className="mt-auto pt-4 text-[11px] text-text-faint text-center">
               点击翻回正面
             </p>

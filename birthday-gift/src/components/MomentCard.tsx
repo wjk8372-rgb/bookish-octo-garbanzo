@@ -117,16 +117,6 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
             </div>
 
 
-            {moment.note && (
-              <div className="mt-4 pt-4 border-t border-amber-warm/20">
-                <p className="text-[11px] text-amber-warm/70 tracking-widest mb-2">
-                  你可能不知道的是…
-                </p>
-                <p className="font-kai text-text text-base md:text-lg leading-relaxed">
-                  {moment.note}
-                </p>
-              </div>
-            )}
           </div>
       </div>
     </motion.div>

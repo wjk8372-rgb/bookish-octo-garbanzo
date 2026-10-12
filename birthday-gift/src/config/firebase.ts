@@ -4,13 +4,13 @@ import { getDatabase, type Database } from 'firebase/database'
 // 替换为你的 Firebase 项目配置
 // 获取方式：Firebase 控制台 → 项目设置 → 常规 → 你的应用 → SDK 设置和配置
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDdsE8P59egcGfT3LEuTIBVYRFGvv4JGus",
+  authDomain: "birthday-gift-1013.firebaseapp.com",
+  databaseURL: "https://birthday-gift-1013-default-rtdb.firebaseio.com",
+  projectId: "birthday-gift-1013",
+  storageBucket: "birthday-gift-1013.appspot.com",
+  messagingSenderId: "1036206397006",
+  appId: "1:1036206397006:web:bf8a0e6c3d2a5b7e"
 }
 
 let app: FirebaseApp | null = null

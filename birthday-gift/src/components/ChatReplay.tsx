@@ -94,7 +94,7 @@ export default function ChatReplay() {
           </div>
 
           {/* 聊天区 */}
-          <div className="chat-window-bg p-4 md:p-5 min-h-[400px] max-h-[70vh] overflow-y-auto">
+          <div className="chat-window-bg p-4 md:p-5 min-h-[400px] max-h-[70vh] overflow-y-auto chat-window-mobile-expand">
             <AnimatePresence initial={false}>
               {visible.map((item, i) => {
                 const showDivider =

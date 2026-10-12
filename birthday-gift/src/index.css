@@ -271,6 +271,45 @@ body {
   border-radius: 2px;
 }
 
+/* ---------- Mobile: disable inner scroll, expand fully ---------- */
+@media (max-width: 768px) {
+  /* 时间线卡片：手机上去掉固定高度和内部滚动 */
+  .flip-card {
+    height: auto !important;
+  }
+  .flip-inner {
+    height: auto !important;
+  }
+  /* 正面占自然高度 */
+  .flip-card:not(.is-flipped) .flip-face:not(.flip-back) {
+    position: relative !important;
+  }
+  .flip-card:not(.is-flipped) .flip-back {
+    display: none !important;
+  }
+  /* 翻转后：背面占自然高度 */
+  .flip-card.is-flipped .flip-back {
+    position: relative !important;
+    transform: none !important;
+  }
+  .flip-card.is-flipped .flip-face:not(.flip-back) {
+    display: none !important;
+  }
+  /* 去掉内部滚动 */
+  .flip-face {
+    overflow: visible !important;
+  }
+  .chat-scroll {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+  /* 聊天记录展厅：手机上去掉最大高度限制 */
+  .chat-window-mobile-expand {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
+
 /* ---------- Range slider ---------- */
 input[type="range"] {
   -webkit-appearance: none;

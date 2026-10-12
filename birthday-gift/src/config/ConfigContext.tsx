@@ -241,7 +241,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
 
   const cloudReady = !!db
-  const isLocalUpdate = useRef(true) // 默认 true：本地数据优先
+  const isLocalUpdate = useRef(false) // 默认 false：初始加载不自动上传，等云端数据到达
   const hasInitCloud = useRef(false)
   const localTsRef = useRef(getLocalTimestamp())
 
@@ -280,9 +280,10 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
         const cloudData = snap.val() as CloudPayload | null
 
         if (!cloudData) {
-          // 云端无数据 → 上传本地
+          // 云端无数据 → 上传本地（仅首次）
           if (!hasInitCloud.current) {
             hasInitCloud.current = true
+            isLocalUpdate.current = true
             uploadToCloud(data)
           }
           return
@@ -295,7 +296,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
         const localTs = localTsRef.current
 
         if (cloudTs > localTs) {
-          // 云端更新 → 拉取
+          // 云端更新 → 拉取，不回写
           isLocalUpdate.current = false
           const storedVersion: number = cloudData.version ?? 0
           const cloudConfig: ConfigData = {
@@ -315,9 +316,11 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
           }
           setSyncStatus('synced')
         } else {
-          // 本地更新或相同 → 不覆盖
+          // 云端不比本地新 → 不覆盖，但标记已同步
           setSyncStatus('synced')
         }
+        // 之后用户主动修改才会上传
+        isLocalUpdate.current = false
       },
       (err) => {
         console.error('[Firebase] 监听失败:', err)
@@ -330,6 +333,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
   }, [])
 
   // 本地数据变化 → 写 localStorage + Firebase
+  // 只有用户主动修改（isLocalUpdate=true）才上传
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
@@ -337,11 +341,12 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       /* noop */
     }
 
-    if (cloudReady && db && isLocalUpdate.current) {
+    if (cloudReady && db && isLocalUpdate.current && hasInitCloud.current) {
       uploadToCloud(data)
     }
 
-    isLocalUpdate.current = true
+    // 重置：非用户主动修改的不会再次触发上传
+    isLocalUpdate.current = false
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, cloudReady])
 

@@ -5,12 +5,14 @@ export const ANNIVERSARY = '2026-11-21' // 一周年
 
 // ── 头像规则 ──
 // 她的头像：
-//   5月11号之前：原始头像
+//   12月1号之前：初识头像（银发贝雷帽）
+//   12月1号 ~ 5月10号：原始头像
 //   5月11号 ~ 8月3号：第二个头像
 //   8月4号之后：第三个头像
 // 我的头像：
 //   12月20号之前：原始头像
 //   12月20号之后：第二个头像
+const HER_AVATAR_CUTOFF_0 = '2025-12-01'
 const AVATAR_CUTOFF_1 = '2026-05-11'
 const AVATAR_CUTOFF_2 = '2026-08-04'
 const ME_AVATAR_CUTOFF = '2025-12-20'
@@ -18,7 +20,8 @@ const ME_AVATAR_CUTOFF = '2025-12-20'
 export function getHerAvatar(date: string): string {
   if (date >= AVATAR_CUTOFF_2) return './images/her-avatar-aug.jpg'
   if (date >= AVATAR_CUTOFF_1) return './images/her-avatar-may.jpg'
-  return './images/her-avatar.jpg'
+  if (date >= HER_AVATAR_CUTOFF_0) return './images/her-avatar.jpg'
+  return './images/her-avatar-nov.jpg'
 }
 
 export function getMeAvatar(date: string): string {

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信件收纳盒 · 原型</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: #1a1714;
+    color: #e8e0d4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 20px;
+  }
+
+  h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.4rem;
+    color: #c4a874;
+    letter-spacing: 0.15em;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+    color: #8a7e6a;
+    margin-bottom: 50px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── 收纳盒容器 ── */
+  .letter-box {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 700px;
+    width: 100%;
+  }
+
+  /* ── 单个信封槽位 ── */
+  .slot {
+    position: relative;
+    width: 80px;
+    height: 110px;
+    perspective: 800px;
+  }
+
+  /* 信封（默认收拢状态） */
+  .envelope {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 110px;
+    background: linear-gradient(135deg, #f5efe0 0%, #ede3cc 100%);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: bottom center;
+    overflow: hidden;
+    border: 1px solid rgba(120,100,60,0.15);
+  }
+
+  /* 信封封口三角 */
+  .envelope::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 45px;
+    background: linear-gradient(180deg, #ddd5c0 0%, #d4ccb8 100%);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    z-index: 2;
+  }
+
+  /* 蜡封 */
+  .wax {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #fff;
+    font-family: 'Noto Serif SC', serif;
+    z-index: 3;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .wax.her { background: linear-gradient(135deg, #e8758a, #c94560); }
+  .wax.me { background: linear-gradient(135deg, #d4a04c, #b8860b); }
+
+  /* ── Hover 时信封拉出 ── */
+  .slot:hover .envelope {
+    top: -55px;
+    height: 165px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  }
+
+  /* ── 封面信息（hover 时显示） ── */
+  .cover-info {
+    position: absolute;
+    top: 50px;
+    left: 0; right: 0;
+    padding: 4px 6px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.15s;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .slot:hover .cover-info {
+    opacity: 1;
+  }
+
+  .cover-info .title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 9px;
+    color: #5a4a30;
+    line-height: 1.3;
+    margin-bottom: 3px;
+    font-weight: 500;
+  }
+
+  .cover-info .date {
+    font-size: 8px;
+    color: #8a7a5a;
+  }
+
+  .cover-info .from {
+    font-size: 7px;
+    color: #a89060;
+    letter-spacing: 0.15em;
+    margin-top: 2px;
+  }
+
+  /* ── hover 后信封底部展开封面 ── */
+  .slot:hover .envelope::before {
+    height: 30px;
+    transition: height 0.3s ease;
+  }
+
+  /* ── 槽位标签（底部小标记） ── */
+  .slot-label {
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 7px;
+    color: #6a5e4a;
+    white-space: nowrap;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+  }
+
+  .slot:hover .slot-label {
+    opacity: 1;
+    color: #c4a874;
+  }
+
+  /* ── 展开详情面板（点击后） ── */
+  .detail-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 8, 6, 0.85);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    backdrop-filter: blur(4px);
+  }
+
+  .detail-overlay.active {
+    display: flex;
+  }
+
+  .detail-card {
+    background: #f5efe0;
+    color: #3a2e1e;
+    border-radius: 8px;
+    padding: 40px 50px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    position: relative;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .detail-card .close-btn {
+    position: absolute;
+    top: 16px; right: 20px;
+    font-size: 1.2rem;
+    color: #a89060;
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: color 0.2s;
+  }
+  .detail-card .close-btn:hover { color: #5a4a30; }
+
+  .detail-card .d-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.3rem;
+    color: #3a2e1e;
+    margin-bottom: 6px;
+  }
+
+  .detail-card .d-meta {
+    font-size: 0.78rem;
+    color: #8a7a5a;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(120,100,60,0.15);
+  }
+
+  .detail-card .d-content {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.85rem;
+    line-height: 2;
+    white-space: pre-line;
+    color: #4a3e2e;
+  }
+
+  .detail-card .d-note {
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(120,100,60,0.1);
+    font-size: 0.75rem;
+    color: #a89060;
+    font-style: italic;
+  }
+
+  .detail-card .d-tags {
+    margin-top: 12px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .detail-card .d-tag {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(196,168,116,0.15);
+    color: #8a7a4a;
+  }
+
+  /* ── 底部说明 ── */
+  .hint {
+    margin-top: 40px;
+    font-size: 0.7rem;
+    color: #6a5e4a;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── 收纳盒底座阴影 ── */
+  .box-base {
+    margin-top: -8px;
+    width: 680px;
+    max-width: 95%;
+    height: 6px;
+    background: linear-gradient(180deg, rgba(196,168,116,0.15) 0%, transparent 100%);
+    border-radius: 0 0 50% 50% / 100% 100% 0 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>信件收纳盒</h1>
+<p class="subtitle">鼠标移到信封上 · 自动拉出查看 · 点击展开全文</p>
+
+<div class="letter-box" id="box"></div>
+<div class="box-base"></div>
+
+<p class="hint">共 8 封信 · 悬停查看封面 · 点击阅读全文</p>
+
+<!-- 详情弹窗 -->
+<div class="detail-overlay" id="overlay">
+  <div class="detail-card" id="detailCard"></div>
+</div>
+
+<script>
+const letters = [
+  {
+    title: '想要靠近你', date: '2026-05-28', from: 'me',
+    summary: '有些话，打字说不出口',
+    note: '这封信我写了很久，改了又改。发出的那一刻，手是抖的。',
+    tags: ['告白', '勇气'],
+    content: '在和你的相处中，我也怀揣着一种朴素的愿望，我越来越在意你，想更多地认识你…（全文省略，实际展示完整内容）'
+  },
+  {
+    title: '请允许我停在这里', date: '2026-05-28', from: 'her',
+    summary: '你说，你也愿意',
+    note: '看到回信的那一刻，我觉得整个世界都亮了。',
+    tags: ['回信', '愿意'],
+    content: '我认真看完了你写的这些。\n\n其实看完之后，我心里是有被轻轻撞到的…（全文省略）'
+  },
+  {
+    title: '离开你，因为无法靠近你', date: '2026-07-22', from: 'me',
+    summary: '非现实的关系，不应该承载如此多的期望',
+    note: '这几段话我写了好几天，写了又删，删了又写。最后还是决定发给你。',
+    tags: ['承诺', '现实', '网恋'],
+    content: '我认真思考了一下，我觉得我们的关系应该结束了…（全文省略）'
+  },
+  {
+    title: '原谅我', date: '2026-08-03', from: 'her',
+    summary: '你说，舒适区就在这方寸之屏里边',
+    note: '看到"原谅我的怯懦"那一句，我突然懂了你所有的犹豫。',
+    tags: ['怯懦', '方寸之屏', 'soulmate'],
+    content: '小凯子，我仔细思考过这个事情…（全文省略）'
+  },
+  {
+    title: '我期望一颗一动不动的石头', date: '2026-08-03', from: 'me',
+    summary: '如果没有欲求就没有生命力，最重要的是在路上',
+    note: '写下这些的时候，我已经做好了决定。只是迟迟下不了决心。',
+    tags: ['越界', '欲望', '在路上'],
+    content: '其实你从一开始就把界限摆了出来…（全文省略）'
+  },
+  {
+    title: '我爱你', date: '2026-08-04', from: 'her',
+    summary: '凌晨两点四十六，你的三个字',
+    note: '"我爱你"三个字，你在最不该说的时候说了出来。那一夜我没睡。',
+    tags: ['我爱你', '窄门', '阿丽莎'],
+    content: '在咱们聊窄门的时候，其实我已经能感觉到…（全文省略）'
+  },
+  {
+    title: '把我从小黑屋里放出来好不好', date: '2026-08-05', from: 'me',
+    summary: '和你分开是一个很艰难的决定，我想争取一下',
+    note: '说出"结束"之后，我才意识到我有多么在乎你。这封信写了很久，每一句都在颤抖。',
+    tags: ['挽回', '自我预言', '小黑屋'],
+    content: '和你分开是一个很艰难的决定，这几天我很难过…（全文省略）'
+  },
+  {
+    title: '你的小凯子', date: '2026-08-08', from: 'me',
+    summary: '我们可不可以再重新探索一下关系存续的可能呢',
+    note: '冷静下来之后，我才看清我们的关系到底是什么样子。这一次，我想把你放在正确的位置上。',
+    tags: ['朋友', '重新探索', '小凯子'],
+    content: '若若，我这几天时不时地在想我们的事情…（全文省略）'
+  },
+];
+
+const box = document.getElementById('box');
+const overlay = document.getElementById('overlay');
+const detailCard = document.getElementById('detailCard');
+
+letters.forEach((letter, i) => {
+  const slot = document.createElement('div');
+  slot.className = 'slot';
+
+  const isHer = letter.from === 'her';
+  const dateStr = letter.date.replace(/-/g, '.').replace(/ .*/, '');
+
+  slot.innerHTML = `
+    <div class="envelope" data-index="${i}">
+      <div class="wax ${isHer ? 'her' : 'me'}">${isHer ? '怡' : '我'}</div>
+      <div class="cover-info">
+        <div class="title">《${letter.title}》</div>
+        <div class="date">${dateStr}</div>
+        <div class="from">${isHer ? 'FROM HER' : 'FROM ME'}</div>
+      </div>
+    </div>
+    <div class="slot-label">${dateStr}</div>
+  `;
+
+  slot.querySelector('.envelope').addEventListener('click', () => showDetail(i));
+  box.appendChild(slot);
+});
+
+function showDetail(index) {
+  const l = letters[index];
+  const isHer = l.from === 'her';
+  const dateStr = l.date.replace(/-/g, '.').replace(/ .*/, '');
+
+  detailCard.innerHTML = `
+    <button class="close-btn" onclick="document.getElementById('overlay').classList.remove('active')">✕</button>
+    <div class="d-title">《${l.title}》</div>
+    <div class="d-meta">${dateStr} · ${isHer ? '她' : '我'} · ${l.summary}</div>
+    <div class="d-content">${l.content}</div>
+    <div class="d-note">📝 ${l.note}</div>
+    <div class="d-tags">${l.tags.map(t => `<span class="d-tag">#${t}</span>`).join('')}</div>
+  `;
+  overlay.classList.add('active');
+}
+
+overlay.addEventListener('click', (e) => {
+  if (e.target === overlay) overlay.classList.remove('active');
+});
+</script>
+
+</body>
+</html>

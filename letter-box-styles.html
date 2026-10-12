@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复古信封收纳盒 · 样式对比</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: #1a1510;
+    color: #e8e0d4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 20px 80px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+    font-size: 1.6rem;
+    color: #c4a874;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+    color: #8a7e6a;
+    margin-bottom: 60px;
+    letter-spacing: 0.12em;
+  }
+
+  /* ═══════════════════════════════════════
+     样式 A：牛皮纸复古信封
+     ═══════════════════════════════════════ */
+  .style-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    color: #a89060;
+    letter-spacing: 0.15em;
+    margin-bottom: 20px;
+    margin-top: 40px;
+    border-bottom: 1px solid rgba(196,168,116,0.2);
+    padding-bottom: 8px;
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+  }
+  .style-label:first-of-type { margin-top: 0; }
+
+  /* ── A: 牛皮纸 ── */
+  .box-a {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 700px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .slot-a {
+    position: relative;
+    width: 90px;
+    height: 125px;
+    perspective: 800px;
+  }
+
+  .env-a {
+    position: absolute;
+    top: 0; left: 0;
+    width: 90px;
+    height: 125px;
+    cursor: pointer;
+    transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: bottom center;
+  }
+
+  .env-a-inner {
+    width: 100%;
+    height: 100%;
+    /* 牛皮纸纹理 */
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(140,100,50,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 80%, rgba(100,70,30,0.06) 0%, transparent 50%),
+      linear-gradient(135deg, #d4c4a0 0%, #c9b890 40%, #d0c098 100%);
+    border: 1px solid #b09870;
+    border-radius: 3px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 0 20px rgba(120,90,40,0.08);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 信封封口（V形） */
+  .env-a-inner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 55px;
+    background:
+      linear-gradient(180deg, #c4b088 0%, #beb098 100%);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    z-index: 2;
+    border-bottom: 1px solid rgba(100,70,30,0.2);
+  }
+
+  /* 邮票 */
+  .stamp-a {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 24px; height: 30px;
+    z-index: 4;
+    border: 1.5px dashed #8a6a40;
+    background: rgba(240,225,190,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #6a5030;
+  }
+
+  /* 蜡封 */
+  .wax-a {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 11px;
+    color: #f5efe0;
+    z-index: 3;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.2), inset 0 2px 3px rgba(255,255,255,0.15);
+  }
+  .wax-a.her {
+    background: radial-gradient(circle at 35% 35%, #d4657a 0%, #b04060 60%, #8a2a48 100%);
+  }
+  .wax-a.me {
+    background: radial-gradient(circle at 35% 35%, #c4953c 0%, #a67820 60%, #8a5e10 100%);
+  }
+  /* 蜡封边缘不规则 */
+  .wax-a::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.1);
+    clip-path: polygon(10% 0, 25% 5%, 40% 0, 55% 8%, 70% 2%, 85% 10%, 100% 5%, 95% 25%, 100% 45%, 92% 60%, 100% 80%, 85% 95%, 65% 100%, 45% 95%, 25% 100%, 10% 90%, 0 75%, 8% 55%, 0 35%, 5% 15%);
+  }
+
+  /* 封面信息 */
+  .cover-a {
+    position: absolute;
+    top: 58px;
+    left: 0; right: 0;
+    padding: 0 5px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.15s;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .slot-a:hover .cover-a { opacity: 1; }
+  .slot-a:hover .env-a { top: -60px; height: 185px; }
+  .slot-a:hover .env-a-inner { box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 30px rgba(120,90,40,0.1); }
+  .slot-a:hover .env-a-inner::before { height: 35px; transition: height 0.3s; }
+
+  .cover-a .title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 10px;
+    color: #4a3820;
+    line-height: 1.3;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .cover-a .date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 9px;
+    color: #7a6240;
+    font-style: italic;
+  }
+  .cover-a .from {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8px;
+    color: #9a7e50;
+    letter-spacing: 0.2em;
+    margin-top: 3px;
+    text-transform: uppercase;
+  }
+
+  /* 底部日期 */
+  .label-a {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 9px;
+    color: #6a5e4a;
+    white-space: nowrap;
+    opacity: 0.4;
+    transition: all 0.3s;
+    font-style: italic;
+  }
+  .slot-a:hover .label-a { opacity: 1; color: #c4a874; }
+
+
+  /* ═══════════════════════════════════════
+     样式 B：深色火漆复古
+     ═══════════════════════════════════════ */
+  .box-b {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 700px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .slot-b {
+    position: relative;
+    width: 90px;
+    height: 125px;
+  }
+
+  .env-b {
+    position: absolute;
+    top: 0; left: 0;
+    width: 90px;
+    height: 125px;
+    cursor: pointer;
+    transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: bottom center;
+  }
+
+  .env-b-inner {
+    width: 100%;
+    height: 100%;
+    background:
+      linear-gradient(135deg, #e8dcc8 0%, #ddd0b8 50%, #e2d5bc 100%);
+    border: 1px solid #c4a874;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 双线边框装饰 */
+  .env-b-inner::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 0.5px solid rgba(120,90,50,0.2);
+    border-radius: 1px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* 封口 */
+  .env-b-inner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50px;
+    background: linear-gradient(180deg, #d4c4a0 0%, #ccc0a8 100%);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    z-index: 2;
+  }
+
+  /* 火漆封印 */
+  .wax-b {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 11px;
+    color: rgba(255,250,240,0.95);
+    z-index: 3;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .wax-b.her {
+    background: radial-gradient(circle at 30% 30%, #c94560 0%, #9a2848 50%, #6a1830 100%);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4), inset 0 -3px 5px rgba(0,0,0,0.25), inset 0 2px 4px rgba(255,255,255,0.12);
+  }
+  .wax-b.me {
+    background: radial-gradient(circle at 30% 30%, #b8860b 0%, #8a6210 50%, #5a4008 100%);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4), inset 0 -3px 5px rgba(0,0,0,0.25), inset 0 2px 4px rgba(255,255,255,0.12);
+  }
+  /* 火漆不规则边缘 */
+  .wax-b::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    background: inherit;
+    border-radius: 46% 54% 50% 50% / 54% 46% 54% 46%;
+    z-index: -1;
+    filter: blur(0.5px);
+  }
+
+  /* 装饰花纹 */
+  .ornament-b {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: rgba(120,90,50,0.15);
+    z-index: 1;
+  }
+
+  /* 封面信息 */
+  .cover-b {
+    position: absolute;
+    top: 55px;
+    left: 0; right: 0;
+    padding: 0 5px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.15s;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .slot-b:hover .cover-b { opacity: 1; }
+  .slot-b:hover .env-b { top: -60px; height: 185px; }
+  .slot-b:hover .env-b-inner { box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+  .slot-b:hover .env-b-inner::before { height: 32px; transition: height 0.3s; }
+
+  .cover-b .title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 10px;
+    color: #3a2e1e;
+    line-height: 1.3;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .cover-b .divider {
+    width: 20px;
+    height: 1px;
+    background: rgba(120,90,50,0.3);
+    margin: 3px auto;
+  }
+  .cover-b .date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 9px;
+    color: #6a5030;
+    font-style: italic;
+  }
+  .cover-b .from {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8px;
+    color: #8a6a40;
+    letter-spacing: 0.2em;
+    margin-top: 3px;
+    text-transform: uppercase;
+  }
+
+  .label-b {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 9px;
+    color: #6a5e4a;
+    white-space: nowrap;
+    opacity: 0.35;
+    transition: all 0.3s;
+    font-style: italic;
+  }
+  .slot-b:hover .label-b { opacity: 1; color: #c4a874; }
+
+
+  /* ═══════════════════════════════════════
+     样式 C：羊皮纸卷边复古
+     ═══════════════════════════════════════ */
+  .box-c {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 700px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .slot-c {
+    position: relative;
+    width: 90px;
+    height: 125px;
+  }
+
+  .env-c {
+    position: absolute;
+    top: 0; left: 0;
+    width: 90px;
+    height: 125px;
+    cursor: pointer;
+    transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: bottom center;
+  }
+
+  .env-c-inner {
+    width: 100%;
+    height: 100%;
+    /* 羊皮纸：更黄更旧 */
+    background:
+      radial-gradient(ellipse at 20% 15%, rgba(160,120,50,0.1) 0%, transparent 40%),
+      radial-gradient(ellipse at 80% 85%, rgba(100,70,20,0.08) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(180,150,80,0.05) 0%, transparent 70%),
+      linear-gradient(135deg, #e6d4a8 0%, #dcc8a0 50%, #e0d0a8 100%);
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    overflow: hidden;
+    position: relative;
+    /* 毛边效果 */
+    filter: drop-shadow(0 0 1px rgba(100,70,20,0.15));
+  }
+
+  /* 卷边阴影 */
+  .env-c-inner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 2px;
+    box-shadow:
+      inset 0 0 15px rgba(120,80,20,0.08),
+      inset 0 -3px 6px rgba(100,60,10,0.06),
+      inset 0 3px 6px rgba(255,240,200,0.1);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* 封口 */
+  .env-c-inner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50px;
+    background: linear-gradient(180deg, #d4c098 0%, #ccb888 100%);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    z-index: 2;
+  }
+
+  /* 邮戳印章 */
+  .postmark-c {
+    position: absolute;
+    top: 5px;
+    right: 4px;
+    width: 26px;
+    height: 26px;
+    border: 1.5px solid rgba(100,60,20,0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 7px;
+    color: rgba(100,60,20,0.3);
+    z-index: 4;
+    transform: rotate(-12deg);
+    text-align: center;
+    line-height: 1;
+  }
+
+  /* 蜡封 */
+  .wax-c {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 10px;
+    color: rgba(255,250,240,0.95);
+    z-index: 3;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .wax-c.her {
+    background: radial-gradient(circle at 30% 30%, #c94560 0%, #8a2848 60%, #5a1430 100%);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.2);
+  }
+  .wax-c.me {
+    background: radial-gradient(circle at 30% 30%, #b8860b 0%, #8a6210 60%, #4a3008 100%);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.2);
+  }
+
+  /* 封面信息 */
+  .cover-c {
+    position: absolute;
+    top: 55px;
+    left: 0; right: 0;
+    padding: 0 5px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.15s;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .slot-c:hover .cover-c { opacity: 1; }
+  .slot-c:hover .env-c { top: -60px; height: 185px; }
+  .slot-c:hover .env-c-inner { box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+  .slot-c:hover .env-c-inner::before { height: 32px; transition: height 0.3s; }
+
+  .cover-c .title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 10px;
+    color: #3a2a10;
+    line-height: 1.3;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .cover-c .divider {
+    width: 16px;
+    height: 1px;
+    background: rgba(100,60,20,0.2);
+    margin: 3px auto;
+  }
+  .cover-c .date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 9px;
+    color: #6a4a20;
+    font-style: italic;
+  }
+  .cover-c .from {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8px;
+    color: #8a6030;
+    letter-spacing: 0.2em;
+    margin-top: 3px;
+    text-transform: uppercase;
+  }
+
+  .label-c {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 9px;
+    color: #6a5e4a;
+    white-space: nowrap;
+    opacity: 0.35;
+    transition: all 0.3s;
+    font-style: italic;
+  }
+  .slot-c:hover .label-c { opacity: 1; color: #c4a874; }
+
+  /* ── 底座 ── */
+  .base {
+    margin-top: -6px;
+    width: 660px;
+    max-width: 95%;
+    height: 6px;
+    background: linear-gradient(180deg, rgba(196,168,116,0.12) 0%, transparent 100%);
+    border-radius: 0 0 50% 50% / 100% 100% 0 0;
+  }
+
+  .hint {
+    margin-top: 30px;
+    font-size: 0.7rem;
+    color: #6a5e4a;
+  }
+</style>
+</head>
+<body>
+
+<h1>复古信封样式</h1>
+<p class="subtitle">三种风格 · 悬停查看封面 · 选择你喜欢的</p>
+
+<!-- 样式 A: 牛皮纸 -->
+<div class="style-label">A · 牛皮纸复古 — 粗犷纹理 + 蜡封边缘不规则</div>
+<div class="box-a" id="boxA"></div>
+<div class="base"></div>
+
+<!-- 样式 B: 深色火漆 -->
+<div class="style-label">B · 火漆封印 — 双线边框 + 火漆不规则边缘</div>
+<div class="box-b" id="boxB"></div>
+<div class="base"></div>
+
+<!-- 样式 C: 羊皮纸 -->
+<div class="style-label">C · 羊皮纸卷边 — 泛黄做旧 + 圆形邮戳</div>
+<div class="box-c" id="boxC"></div>
+<div class="base"></div>
+
+<p class="hint">A 粗犷 | B 精致 | C 做旧</p>
+
+<script>
+const letters = [
+  { title: '想要靠近你', date: '2026.05.28', from: 'me' },
+  { title: '请允许我停在这里', date: '2026.05.28', from: 'her' },
+  { title: '离开你，因为无法靠近你', date: '2026.07.22', from: 'me' },
+  { title: '原谅我', date: '2026.08.03', from: 'her' },
+  { title: '我期望一颗一动不动的石头', date: '2026.08.03', from: 'me' },
+  { title: '我爱你', date: '2026.08.04', from: 'her' },
+  { title: '把我从小黑屋里放出来好不好', date: '2026.08.05', from: 'me' },
+  { title: '你的小凯子', date: '2026.08.08', from: 'me' },
+];
+
+function createSlot(letter, container, styleClass) {
+  const slot = document.createElement('div');
+  slot.className = 'slot-' + styleClass;
+  const isHer = letter.from === 'her';
+  const waxChar = isHer ? '怡' : '凯';
+  const fromText = isHer ? 'FROM YOU' : 'FROM 凯';
+
+  if (styleClass === 'a') {
+    slot.innerHTML = `
+      <div class="env-a">
+        <div class="env-a-inner">
+          <div class="stamp-a">✉</div>
+          <div class="wax-a ${isHer ? 'her' : 'me'}">${waxChar}</div>
+          <div class="cover-a">
+            <div class="title">《${letter.title}》</div>
+            <div class="date">${letter.date}</div>
+            <div class="from">${fromText}</div>
+          </div>
+        </div>
+      </div>
+      <div class="label-a">${letter.date}</div>
+    `;
+  } else if (styleClass === 'b') {
+    slot.innerHTML = `
+      <div class="env-b">
+        <div class="env-b-inner">
+          <div class="ornament-b">❦</div>
+          <div class="wax-b ${isHer ? 'her' : 'me'}">${waxChar}</div>
+          <div class="cover-b">
+            <div class="title">《${letter.title}》</div>
+            <div class="divider"></div>
+            <div class="date">${letter.date}</div>
+            <div class="from">${fromText}</div>
+          </div>
+        </div>
+      </div>
+      <div class="label-b">${letter.date}</div>
+    `;
+  } else {
+    slot.innerHTML = `
+      <div class="env-c">
+        <div class="env-c-inner">
+          <div class="postmark-c">POST<br>${letter.date.slice(5)}</div>
+          <div class="wax-c ${isHer ? 'her' : 'me'}">${waxChar}</div>
+          <div class="cover-c">
+            <div class="title">《${letter.title}》</div>
+            <div class="divider"></div>
+            <div class="date">${letter.date}</div>
+            <div class="from">${fromText}</div>
+          </div>
+        </div>
+      </div>
+      <div class="label-c">${letter.date}</div>
+    `;
+  }
+  container.appendChild(slot);
+}
+
+const boxA = document.getElementById('boxA');
+const boxB = document.getElementById('boxB');
+const boxC = document.getElementById('boxC');
+
+letters.forEach(l => createSlot(l, boxA, 'a'));
+letters.forEach(l => createSlot(l, boxB, 'b'));
+letters.forEach(l => createSlot(l, boxC, 'c'));
+</script>
+
+</body>
+</html>

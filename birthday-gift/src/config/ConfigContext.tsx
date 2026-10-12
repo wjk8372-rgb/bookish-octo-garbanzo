@@ -86,26 +86,9 @@ const defaultSiteText: SiteText = {
   },
   optionalLetter: {
     intro: '最后，有一封信',
-    buttonText: '如果你愿意，可以点开。',
-    buttonSubtext: '不点也没关系。',
-    letterContent: `10.13 生日快乐。
-
-从 2025.11.21 你私信我那天算起，到今天是第 327 天。
-距离我们认识一年，还差 39 天。
-
-我本来想等 11.21 再写这些，但生日更重要。
-
-认识你之后，一年变成了很多具体的瞬间。
-那些你说过的话、写过的字，都被我好好收着。
-
-我有时候会想，如果我们不只是朋友，会怎样。
-但我更怕让你为难。
-
-所以今天，你只需要开心。
-生日快乐。
-
-11.21 那天，如果我们还记得，就再庆祝一次。
-不用回复，不用有压力。`,
+    buttonText: '',
+    buttonSubtext: '',
+    letterContent: '',
     signature: '—— 写于 2026.10.13',
   },
   footer: {
@@ -151,7 +134,7 @@ type ConfigContextValue = {
 
 const STORAGE_KEY = 'bg-config-v1'
 const STORAGE_TS_KEY = 'bg-config-ts'
-const DATA_VERSION = 11
+const DATA_VERSION = 12
 
 const ConfigContext = createContext<ConfigContextValue | null>(null)
 

@@ -115,7 +115,10 @@ export default function MusicPicker({ bgm }: MusicPickerProps) {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="space-y-1 mt-1">
+                    <div
+                      className="space-y-1 mt-1 overflow-y-auto pr-1"
+                      style={{ maxHeight: '230px' }}
+                    >
                       {bgm.tracks.map((t) => {
                         const active = bgm.currentTrack?.id === t.id
                         return (

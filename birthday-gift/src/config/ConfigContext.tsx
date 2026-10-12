@@ -151,7 +151,7 @@ type ConfigContextValue = {
 
 const STORAGE_KEY = 'bg-config-v1'
 const STORAGE_TS_KEY = 'bg-config-ts'
-const DATA_VERSION = 7
+const DATA_VERSION = 8
 
 const ConfigContext = createContext<ConfigContextValue | null>(null)
 
@@ -194,7 +194,22 @@ function mergeMoments(
         tags: existing.tags,
       })
     } else {
-      result.push(existing)
+      // 保留用户编辑，但如果信件内容为空则用默认内容补回
+      const merged = { ...existing }
+      if (def.type === 'letter' && def.letter) {
+        if (!merged.letter || !merged.letter.content) {
+          merged.letter = def.letter
+        } else {
+          // 保留用户的 from 字段，但确保 content 不为空
+          merged.letter = { ...def.letter, ...merged.letter }
+          if (!merged.letter.content) merged.letter.content = def.letter.content
+        }
+      }
+      // 聊天记录同样确保不为空
+      if (def.type === 'chat' && def.chat && (!merged.chat || merged.chat.length === 0)) {
+        merged.chat = def.chat
+      }
+      result.push(merged)
     }
   }
   const defaultIds = new Set(defaultMoments.map((m) => m.id))

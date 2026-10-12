@@ -58,7 +58,7 @@ const defaultSiteText: SiteText = {
     dateRange: '2025.11.21 — 2026.10.13',
     mainTitle: '10.13',
     subTitle: '生日快乐',
-    line1: '从 2025.11.21 你私信我那天，到现在。',
+    line1: '从 2025.11.21 我们偶然相遇那天，到现在。',
     line2: '第 {days} 天，距离我们认识一年，还差 {toAnniv} 天。',
     buttonText: '打开我们的第一年',
     scrollHint: '向下滚动',

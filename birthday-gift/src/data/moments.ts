@@ -239,8 +239,6 @@ export const moments: Moment[] = [
       { from: 'her', text: '是不是' },
       { from: 'her', text: '是不是' },
       { from: 'her', text: '是不是' },
-      { from: 'me', text: '当时很重要' },
-      { from: 'me', text: '现在不重要了' },
     ],
     note: '凌晨三点，我鼓起勇气问你"抱不抱"。你连问了四个"是不是"。当时很重要，现在不重要了——但那个凌晨的心跳，我还记得。',
     tags: ['拥抱', '凌晨', '心跳', '是不是'],

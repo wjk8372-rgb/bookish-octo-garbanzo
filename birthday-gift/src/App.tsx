@@ -7,7 +7,8 @@ import Hero from './components/Hero'
 import PinLock from './components/PinLock'
 import Prologue from './components/Prologue'
 import Timeline from './components/Timeline'
-import ChatReplay from './components/ChatReplay'
+// ChatReplay hidden — content duplicates Timeline
+// import ChatReplay from './components/ChatReplay'
 import LetterViewer from './components/LetterViewer'
 import Stats from './components/Stats'
 import OptionalLetter from './components/OptionalLetter'
@@ -98,7 +99,7 @@ function AppContent() {
               <div ref={contentRef}>
                 <Prologue />
                 <Timeline />
-                <ChatReplay />
+                {/* <ChatReplay /> — hidden, content duplicates Timeline */}
                 <LetterViewer />
                 <Stats />
                 <OptionalLetter onOpen={bgm.duck} />

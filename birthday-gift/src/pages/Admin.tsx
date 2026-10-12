@@ -22,7 +22,7 @@ const inputCls =
 const labelCls = 'text-xs text-text-faint mb-1 block'
 
 export default function Admin() {
-  const { tracks, moments, siteText, setTracks, setMoments, setSiteText, reset, exportJSON, importJSON } =
+  const { tracks, moments, siteText, setTracks, setMoments, setSiteText, reset, exportJSON, importJSON, cloudReady, syncStatus, forceUpload } =
     useConfig()
   const [tab, setTab] = useState<Tab>('songs')
 
@@ -77,8 +77,33 @@ export default function Admin() {
 
         {/* Config notice */}
         <div className="mb-6 p-3 rounded-lg bg-amber-warm/5 border border-amber-warm/15 text-xs text-text-faint">
-          修改自动保存到浏览器本地。换设备需用"导出配置"迁移。
-          访问 <code className="text-amber-soft">网址#admin</code> 可再次打开此页面。
+          <div className="flex items-center gap-2 flex-wrap">
+            {cloudReady ? (
+              <span className="flex items-center gap-1.5">
+                <span className={`w-2 h-2 rounded-full ${
+                  syncStatus === 'syncing' ? 'bg-yellow-400 animate-pulse' :
+                  syncStatus === 'synced' ? 'bg-green-400' :
+                  syncStatus === 'error' ? 'bg-red-400' : 'bg-gray-400'
+                }`} />
+                {syncStatus === 'syncing' ? '正在同步...' :
+                 syncStatus === 'synced' ? '已同步到云端' :
+                 syncStatus === 'error' ? '同步失败（请检查数据库规则）' : '等待同步'}
+              </span>
+            ) : (
+              <span className="text-text-faint">云同步未配置，仅本地保存</span>
+            )}
+            {cloudReady && (
+              <button
+                onClick={forceUpload}
+                className="text-amber-soft hover:underline ml-auto"
+              >
+                手动同步
+              </button>
+            )}
+            <span className="text-text-faint ml-auto">
+              访问 <code className="text-amber-soft">网址#admin</code> 可再次打开此页面。
+            </span>
+          </div>
         </div>
 
         {/* Tabs */}

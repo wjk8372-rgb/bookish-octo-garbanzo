@@ -9,7 +9,7 @@ import {
 import { tracks as defaultTracks, type Track } from '../data/tracks'
 import { moments as defaultMoments, type Moment } from '../data/moments'
 import { db } from './firebase'
-import { ref, onValue, set as dbSet } from 'firebase/database'
+import { ref, onValue, set as dbSet, serverTimestamp } from 'firebase/database'
 
 export type TrackConfig = Track & { hidden?: boolean }
 export type MomentConfig = Moment & { hidden?: boolean }
@@ -125,6 +125,13 @@ type ConfigData = {
   siteText: SiteText
 }
 
+type CloudPayload = ConfigData & {
+  updatedAt?: number // 本地时间戳（写入时）
+  cloudUpdatedAt?: unknown // Firebase 服务器时间戳
+}
+
+type SyncStatus = 'idle' | 'syncing' | 'synced' | 'error'
+
 type ConfigContextValue = {
   tracks: TrackConfig[]
   moments: MomentConfig[]
@@ -138,9 +145,12 @@ type ConfigContextValue = {
   exportJSON: () => void
   importJSON: (json: string) => boolean
   cloudReady: boolean
+  syncStatus: SyncStatus
+  forceUpload: () => void
 }
 
 const STORAGE_KEY = 'bg-config-v1'
+const STORAGE_TS_KEY = 'bg-config-ts'
 const DATA_VERSION = 7
 
 const ConfigContext = createContext<ConfigContextValue | null>(null)
@@ -194,8 +204,16 @@ function mergeMoments(
   return result
 }
 
+function getLocalTimestamp(): number {
+  const ts = localStorage.getItem(STORAGE_TS_KEY)
+  return ts ? parseInt(ts, 10) : 0
+}
+
+function setLocalTimestamp(ts: number) {
+  localStorage.setItem(STORAGE_TS_KEY, String(ts))
+}
+
 export function ConfigProvider({ children }: { children: ReactNode }) {
-  // 初始从 localStorage 快速加载（避免白屏）
   const [data, setData] = useState<ConfigData>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
@@ -220,54 +238,98 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
     }
   })
 
-  // Firebase 云同步
-  const cloudReady = !!db
-  const isLocalUpdate = useRef(false) // 区分：是本机改动 vs 云端推送
-  const hasLoadedCloud = useRef(false)
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
 
+  const cloudReady = !!db
+  const isLocalUpdate = useRef(true) // 默认 true：本地数据优先
+  const hasInitCloud = useRef(false)
+  const localTsRef = useRef(getLocalTimestamp())
+
+  // 上传到 Firebase
+  const uploadToCloud = (payload: ConfigData) => {
+    if (!db) return
+    const configRef = ref(db, 'config')
+    const now = Date.now()
+    localTsRef.current = now
+    setLocalTimestamp(now)
+    setSyncStatus('syncing')
+    const cloudPayload: CloudPayload = {
+      ...payload,
+      updatedAt: now,
+      cloudUpdatedAt: serverTimestamp(),
+    }
+    dbSet(configRef, cloudPayload)
+      .then(() => {
+        setSyncStatus('synced')
+      })
+      .catch((err) => {
+        console.error('[Firebase] 上传失败:', err)
+        setSyncStatus('error')
+      })
+  }
+
+  // 监听云端变化
   useEffect(() => {
     if (!db) return
 
     const configRef = ref(db, 'config')
 
-    // 监听云端变化
-    const unsub = onValue(configRef, (snap) => {
-      const cloudData = snap.val()
-      if (!cloudData) {
-        // 云端还没有数据，把本地数据上传
-        if (!hasLoadedCloud.current) {
-          hasLoadedCloud.current = true
-          dbSet(configRef, data).catch(() => {})
+    const unsub = onValue(
+      configRef,
+      (snap) => {
+        const cloudData = snap.val() as CloudPayload | null
+
+        if (!cloudData) {
+          // 云端无数据 → 上传本地
+          if (!hasInitCloud.current) {
+            hasInitCloud.current = true
+            uploadToCloud(data)
+          }
+          return
         }
-        return
-      }
 
-      hasLoadedCloud.current = true
+        hasInitCloud.current = true
 
-      // 云端数据到达 → 更新本地（标记为非本地更新，跳过回写）
-      isLocalUpdate.current = false
-      const storedVersion: number = cloudData.version ?? 0
-      const cloudConfig: ConfigData = {
-        version: DATA_VERSION,
-        tracks: cloudData.tracks ?? defaultTracks.map((t) => ({ ...t })),
-        moments: mergeMoments(cloudData.moments, storedVersion),
-        siteText: mergeSiteText(cloudData.siteText),
-      }
-      setData(cloudConfig)
+        // 时间戳比较：云端更新时间 vs 本地更新时间
+        const cloudTs = cloudData.updatedAt ?? 0
+        const localTs = localTsRef.current
 
-      // 同步到 localStorage
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudConfig))
-      } catch {
-        /* noop */
-      }
-    })
+        if (cloudTs > localTs) {
+          // 云端更新 → 拉取
+          isLocalUpdate.current = false
+          const storedVersion: number = cloudData.version ?? 0
+          const cloudConfig: ConfigData = {
+            version: DATA_VERSION,
+            tracks: cloudData.tracks ?? defaultTracks.map((t) => ({ ...t })),
+            moments: mergeMoments(cloudData.moments, storedVersion),
+            siteText: mergeSiteText(cloudData.siteText),
+          }
+          setData(cloudConfig)
+          localTsRef.current = cloudTs
+          setLocalTimestamp(cloudTs)
+
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudConfig))
+          } catch {
+            /* noop */
+          }
+          setSyncStatus('synced')
+        } else {
+          // 本地更新或相同 → 不覆盖
+          setSyncStatus('synced')
+        }
+      },
+      (err) => {
+        console.error('[Firebase] 监听失败:', err)
+        setSyncStatus('error')
+      },
+    )
 
     return () => unsub()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // 本地数据变化时写入 localStorage + Firebase
+  // 本地数据变化 → 写 localStorage + Firebase
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
@@ -275,13 +337,12 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       /* noop */
     }
 
-    // 只在本地用户主动修改时上传到云端
     if (cloudReady && db && isLocalUpdate.current) {
-      const configRef = ref(db, 'config')
-      dbSet(configRef, data).catch(() => {})
+      uploadToCloud(data)
     }
-    // 重置标记
+
     isLocalUpdate.current = true
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, cloudReady])
 
   const value: ConfigContextValue = {
@@ -342,6 +403,11 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       return false
     },
     cloudReady,
+    syncStatus,
+    forceUpload: () => {
+      isLocalUpdate.current = true
+      uploadToCloud(data)
+    },
   }
 
   return <ConfigContext.Provider value={value}>{children}</ConfigContext.Provider>

@@ -151,7 +151,7 @@ type ConfigContextValue = {
 
 const STORAGE_KEY = 'bg-config-v1'
 const STORAGE_TS_KEY = 'bg-config-ts'
-const DATA_VERSION = 9
+const DATA_VERSION = 10
 
 const ConfigContext = createContext<ConfigContextValue | null>(null)
 

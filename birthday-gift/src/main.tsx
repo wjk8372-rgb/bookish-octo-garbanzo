@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.tsx'
 
 // Build version marker (forces new content hash when changed)
-document.title += '' // cache-bust-v18
+document.title += '' // cache-bust-v19
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

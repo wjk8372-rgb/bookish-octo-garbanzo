@@ -92,7 +92,7 @@ const defaultSiteText: SiteText = {
     signature: '你的小凯子\n—— 写于 2026.10.13',
   },
   footer: {
-    title: '若若21岁生日快乐~',
+    title: '21岁生日快乐~',
     line1: '认识你，是一件很幸运的事。',
     line2: '',
     restartButton: '回到开头',
@@ -134,7 +134,7 @@ type ConfigContextValue = {
 
 const STORAGE_KEY = 'bg-config-v1'
 const STORAGE_TS_KEY = 'bg-config-ts'
-const DATA_VERSION = 15
+const DATA_VERSION = 16
 
 const ConfigContext = createContext<ConfigContextValue | null>(null)
 

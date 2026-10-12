@@ -16,7 +16,7 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
       transition={{ duration: 0.7, delay: Math.min(index * 0.05, 0.3) }}
       className="w-full"
     >
-      <div className="glass p-5 md:p-6 flex flex-col glow-hover h-[480px] md:h-[520px]">
+      <div className="glass p-5 md:p-6 flex flex-col glow-hover md:h-[520px]">
           {/* 正面 */}
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-between mb-3">
@@ -33,7 +33,7 @@ export default function MomentCard({ moment, index }: MomentCardProps) {
             </h3>
             <p className="text-text-faint text-sm mb-4">{moment.summary}</p>
 
-            <div className="flex-1 overflow-y-auto chat-scroll chat-window-bg rounded-xl p-2 -mr-1">
+            <div className="flex-1 md:overflow-y-auto chat-scroll chat-window-bg rounded-xl p-2 -mr-1">
               {moment.type === 'chat' && moment.chat ? (
                 <div className="min-h-full flex flex-col justify-center space-y-1.5">
                   {moment.chat.map((msg, i) => {

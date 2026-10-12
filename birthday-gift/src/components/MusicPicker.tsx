@@ -8,6 +8,7 @@ type MusicPickerProps = {
 
 export default function MusicPicker({ bgm }: MusicPickerProps) {
   const [open, setOpen] = useState(false)
+  const [trackListOpen, setTrackListOpen] = useState(false)
   const panelRef = useRef<HTMLDivElement>(null)
   const btnRef = useRef<HTMLButtonElement>(null)
 
@@ -96,32 +97,53 @@ export default function MusicPicker({ bgm }: MusicPickerProps) {
               </p>
             </div>
 
-            {/* 曲目列表 */}
-            <div className="space-y-1 mb-4">
-              {bgm.tracks.map((t) => {
-                const active = bgm.currentTrack?.id === t.id
-                return (
-                  <button
-                    key={t.id}
-                    onClick={() => handleSelect(t.id)}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
-                      active
-                        ? 'bg-amber-warm/15 text-amber-soft'
-                        : 'text-text-dim hover:bg-night-600/50'
-                    }`}
+            {/* 曲目列表（可折叠） */}
+            <div className="mb-4">
+              <button
+                onClick={() => setTrackListOpen((o) => !o)}
+                className="w-full flex items-center justify-between px-2 py-1.5 text-[11px] text-text-faint hover:text-amber-soft transition-colors"
+              >
+                <span>曲目列表 ({bgm.tracks.length})</span>
+                <span className="text-xs">{trackListOpen ? '▾' : '▸'}</span>
+              </button>
+              <AnimatePresence>
+                {trackListOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
                   >
-                    <span className="flex items-center gap-2">
-                      {active && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-warm" />
-                      )}
-                      {t.name}
-                      <span className="text-[11px] text-text-faint">
-                        {t.mood}
-                      </span>
-                    </span>
-                  </button>
-                )
-              })}
+                    <div className="space-y-1 mt-1">
+                      {bgm.tracks.map((t) => {
+                        const active = bgm.currentTrack?.id === t.id
+                        return (
+                          <button
+                            key={t.id}
+                            onClick={() => handleSelect(t.id)}
+                            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                              active
+                                ? 'bg-amber-warm/15 text-amber-soft'
+                                : 'text-text-dim hover:bg-night-600/50'
+                            }`}
+                          >
+                            <span className="flex items-center gap-2">
+                              {active && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-warm" />
+                              )}
+                              {t.name}
+                              <span className="text-[11px] text-text-faint">
+                                {t.mood}
+                              </span>
+                            </span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* 快速跳转 */}

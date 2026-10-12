@@ -3,10 +3,13 @@ import {
   useContext,
   useState,
   useEffect,
+  useRef,
   type ReactNode,
 } from 'react'
 import { tracks as defaultTracks, type Track } from '../data/tracks'
 import { moments as defaultMoments, type Moment } from '../data/moments'
+import { db } from './firebase'
+import { ref, onValue, set as dbSet } from 'firebase/database'
 
 export type TrackConfig = Track & { hidden?: boolean }
 export type MomentConfig = Moment & { hidden?: boolean }
@@ -134,21 +137,18 @@ type ConfigContextValue = {
   reset: () => void
   exportJSON: () => void
   importJSON: (json: string) => boolean
+  cloudReady: boolean
 }
 
 const STORAGE_KEY = 'bg-config-v1'
-// 数据版本：当默认聊天/信件内容有修正时，递增此版本号，
-// 已缓存的旧版内容会被新版默认内容覆盖（但保留用户的显隐/标题/备注/标签编辑）。
 const DATA_VERSION = 7
 
 const ConfigContext = createContext<ConfigContextValue | null>(null)
 
-// Deep clone helper
 function clone<T>(o: T): T {
   return JSON.parse(JSON.stringify(o))
 }
 
-// Merge stored siteText with defaults (in case new fields were added)
 function mergeSiteText(stored: Partial<SiteText> | undefined): SiteText {
   if (!stored) return clone(defaultSiteText)
   return {
@@ -160,10 +160,6 @@ function mergeSiteText(stored: Partial<SiteText> | undefined): SiteText {
   }
 }
 
-// Merge stored moments with defaults:
-// - 新增的默认条目按默认顺序插入
-// - 当数据版本升级时，用默认的聊天/信件内容覆盖缓存，但保留用户对
-//   显隐(hidden)、标题、摘要、旁白、标签的编辑
 function mergeMoments(
   stored: MomentConfig[] | undefined,
   storedVersion: number,
@@ -179,7 +175,6 @@ function mergeMoments(
     if (!existing) {
       result.push({ ...def })
     } else if (refreshContent) {
-      // 用默认内容（chat/letter/date/type）覆盖，保留用户编辑的偏好字段
       result.push({
         ...def,
         hidden: existing.hidden,
@@ -192,7 +187,6 @@ function mergeMoments(
       result.push(existing)
     }
   }
-  // 用户自行添加的条目（不在默认中）保留
   const defaultIds = new Set(defaultMoments.map((m) => m.id))
   for (const s of stored) {
     if (!defaultIds.has(s.id)) result.push(s)
@@ -201,6 +195,7 @@ function mergeMoments(
 }
 
 export function ConfigProvider({ children }: { children: ReactNode }) {
+  // 初始从 localStorage 快速加载（避免白屏）
   const [data, setData] = useState<ConfigData>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
@@ -225,13 +220,69 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
     }
   })
 
+  // Firebase 云同步
+  const cloudReady = !!db
+  const isLocalUpdate = useRef(false) // 区分：是本机改动 vs 云端推送
+  const hasLoadedCloud = useRef(false)
+
+  useEffect(() => {
+    if (!db) return
+
+    const configRef = ref(db, 'config')
+
+    // 监听云端变化
+    const unsub = onValue(configRef, (snap) => {
+      const cloudData = snap.val()
+      if (!cloudData) {
+        // 云端还没有数据，把本地数据上传
+        if (!hasLoadedCloud.current) {
+          hasLoadedCloud.current = true
+          dbSet(configRef, data).catch(() => {})
+        }
+        return
+      }
+
+      hasLoadedCloud.current = true
+
+      // 云端数据到达 → 更新本地（标记为非本地更新，跳过回写）
+      isLocalUpdate.current = false
+      const storedVersion: number = cloudData.version ?? 0
+      const cloudConfig: ConfigData = {
+        version: DATA_VERSION,
+        tracks: cloudData.tracks ?? defaultTracks.map((t) => ({ ...t })),
+        moments: mergeMoments(cloudData.moments, storedVersion),
+        siteText: mergeSiteText(cloudData.siteText),
+      }
+      setData(cloudConfig)
+
+      // 同步到 localStorage
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudConfig))
+      } catch {
+        /* noop */
+      }
+    })
+
+    return () => unsub()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // 本地数据变化时写入 localStorage + Firebase
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
     } catch {
       /* noop */
     }
-  }, [data])
+
+    // 只在本地用户主动修改时上传到云端
+    if (cloudReady && db && isLocalUpdate.current) {
+      const configRef = ref(db, 'config')
+      dbSet(configRef, data).catch(() => {})
+    }
+    // 重置标记
+    isLocalUpdate.current = true
+  }, [data, cloudReady])
 
   const value: ConfigContextValue = {
     tracks: data.tracks,
@@ -239,16 +290,27 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
     siteText: data.siteText,
     visibleTracks: data.tracks.filter((t) => !t.hidden),
     visibleMoments: data.moments.filter((m) => !m.hidden),
-    setTracks: (tracks) => setData((d) => ({ ...d, tracks })),
-    setMoments: (moments) => setData((d) => ({ ...d, moments })),
-    setSiteText: (siteText) => setData((d) => ({ ...d, siteText })),
-    reset: () =>
+    setTracks: (tracks) => {
+      isLocalUpdate.current = true
+      setData((d) => ({ ...d, tracks }))
+    },
+    setMoments: (moments) => {
+      isLocalUpdate.current = true
+      setData((d) => ({ ...d, moments }))
+    },
+    setSiteText: (siteText) => {
+      isLocalUpdate.current = true
+      setData((d) => ({ ...d, siteText }))
+    },
+    reset: () => {
+      isLocalUpdate.current = true
       setData({
         version: DATA_VERSION,
         tracks: defaultTracks.map((t) => ({ ...t })),
         moments: defaultMoments.map((m) => ({ ...m })),
         siteText: clone(defaultSiteText),
-      }),
+      })
+    },
     exportJSON: () => {
       const blob = new Blob([JSON.stringify(data, null, 2)], {
         type: 'application/json',
@@ -265,6 +327,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
         const parsed = JSON.parse(json)
         if (parsed.tracks && parsed.moments) {
           const importedVersion: number = parsed.version ?? 0
+          isLocalUpdate.current = true
           setData({
             version: DATA_VERSION,
             tracks: parsed.tracks,
@@ -278,6 +341,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       }
       return false
     },
+    cloudReady,
   }
 
   return <ConfigContext.Provider value={value}>{children}</ConfigContext.Provider>
